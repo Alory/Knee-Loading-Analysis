@@ -1,2 +1,2 @@
 # Knee-Loading-Analysis
-my graduation thesis
+This project is for kam data and IoT process.
