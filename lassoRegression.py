@@ -9,57 +9,117 @@ from sklearn.linear_model import Lasso
 def R2(y_test, y_true):
     return 1 - ((y_test - y_true)**2).sum() / ((y_true - y_true.mean())**2).sum()
 
+def delayedData(imudata,lag=0):
+    if(lag == 0):
+        return imudata
+    # imudata = imudata.iloc[:, 2:]#delete 'time' and 'sync' column
+    delayData = pd.DataFrame([])
+    delayData = pd.concat([delayData,imudata])
+    for i in range(lag):
+        delay = i + 1
+        temp = pd.DataFrame([])
+        temp = pd.concat([temp, imudata])
+        temp.columns = imudata.columns + str(delay)
+
+        delayData = delayData.loc[1:].reset_index().iloc[:, 1:]
+        lenth = (temp.shape)[0]
+        temp = temp.loc[0:lenth-delay-1]
+        delayData = pd.concat([temp,delayData],axis=1)
+    lenth = (delayData.shape)[0]
+    # delayData = delayData.loc[0:lenth-lag-1]
+    return delayData
+
+
 tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
         , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
         , 'RLACx', 'RLACy', 'RLACz', 'RLGYx', 'RLGYy', 'RLGYz'
         , 'RMACx', 'RMACy', 'RMACz', 'RMGYx', 'RMGYy', 'RMGYz','mass']
 
 if __name__ == '__main__':
-    data = pd.read_csv('imucom2kam/S16.txt',sep="\t")
+    lag = 2
+
+    imucols = pd.DataFrame(tempIotcols[0:24])
+    cols = pd.DataFrame([])
+    for i in range(lag + 1):
+        cols = pd.concat([cols, imucols + str(i)])
+
+    name = 'S18'
+    data = pd.read_csv('imucom2kam/'+name+'.txt',sep="\t")
     # usecols = list(filter(lambda x:x[2:4]=='GY',tempIotcols))
     # usecols.append('mass')
+    tempdata = data[tempIotcols[0:-1]]
+    delayData = delayedData(tempdata,lag)
+    print(delayData.shape)
     usecols = tempIotcols
-    X = data[usecols]
-    y = data[['y']]
+    # X = data[usecols]
+    X = delayData#[['LLACx','LLACx1','LLACx2']]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=152)
+    lenth = (data.shape)[0]
+    y = data[['y']].loc[lag:lenth]
+    print(y.shape)
+
+    seed = 14
+    X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
 
     # model = LinearRegression()
     # model.fit(X_train, y_train)
     # y_pred = model.predict(X_test)
     # predicted = cross_val_predict(model, X, y, cv=10)
 
-    lassoreg = Lasso(alpha=1e-10, normalize=True, max_iter=1e6)
+    lassoreg = Lasso(alpha=1e-10, normalize=True, max_iter=1e9)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
 
     a = np.fabs(lassoreg.coef_)
-    b = np.sort(a)
+    b = sorted(a,reverse = True)
     index = []
     sortedpos = []
     for i in range(len(b)):
         pos = np.where(a == b[i])
         pos = pos[0][0]
         index.append(a[pos])
-        sortedpos.append(usecols[pos])
+        sortedpos.append(cols.iloc[pos,0])
     print(index)
     print(sortedpos)
 
     from sklearn import metrics
-    print("MSE:", metrics.mean_squared_error(y_test, y_pred))
-    print("RMSE:", np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
+    MSE = metrics.mean_squared_error(y_test, y_pred)
+    RMSE = np.sqrt(metrics.mean_squared_error(y_test, y_pred))
+    print("MSE:", MSE)
+    print("RMSE:", RMSE)
     # print("R2:",R2(y_pred,y_test))
 
-    fig, ax = plt.subplots()
+    plt.figure(figsize=(19.20, 9.06))
+    p1 = plt.subplot(111)
+    # fig, ax = plt.subplots()
 
     # ax.scatter(X_test,y_test)
     # ax.scatter(X_test,y_pred)
+#=====
+    # ax.scatter(y, predicted)
+    # ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+    # ax.set_xlabel('Measured')
+    # ax.set_ylabel('Predicted')
+    # plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'seed-' + str(seed) + ".png")
+# =====
 
-    ax.scatter(y, predicted)
-    ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    ax.set_xlabel('Measured')
-    ax.set_ylabel('Predicted')
+    p1.scatter(y, predicted)
+    p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
+    p1.set_xlabel('Measured')
+    p1.set_ylabel('Predicted')
+    plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'seed-' + str(seed) + ".png")
+
+    output = open('outcome/outcome.txt', 'a')
+    output.write('\ntrial:' + name + '\n')
+    output.write('kam max:' + str(max(data['y'])) + '\n')
+    output.write('MSE:' + str(MSE) + '\n')
+    output.write('RMSE:' + str(RMSE) + '\n')
+    output.write('sorted coef:' + str(index) + '\n')
+    output.write('corresponding pos:' + str(sortedpos) + '\n')
+    output.close()
     plt.show()
+
 
