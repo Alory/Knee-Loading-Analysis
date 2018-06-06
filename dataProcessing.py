@@ -577,3 +577,37 @@ def peakLag(norData,iotData):
     for ipos in range(len(iotCols)):
         lags[iotCols[ipos]] = gylags[iotCols[ipos][0:2]]
     return lags
+
+def delayedData(imudata,lag):
+    # imudata = imudata.iloc[:, 2:]#delete 'time' and 'sync' column
+    delayData = pd.DataFrame([])
+    delayData = pd.concat([delayData,imudata])
+    for i in range(lag):
+        delay = i + 1
+        temp = pd.DataFrame([])
+        temp = pd.concat([temp, imudata])
+        temp.columns = imudata.columns + str(delay)
+
+        delayData = delayData.loc[1:].reset_index().iloc[:, 1:]
+        lenth = (temp.shape)[0]
+        temp = temp.loc[0:lenth-i]
+        delayData = pd.concat([delayData,temp],axis=1)
+    return delayData
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
