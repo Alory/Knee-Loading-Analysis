@@ -29,57 +29,64 @@ def delayedData(imudata,lag=0):
     # delayData = delayData.loc[0:lenth-lag-1]
     return delayData
 
-
+subjectInfo = ['subject','age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']
 tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
         , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
         , 'RLACx', 'RLACy', 'RLACz', 'RLGYx', 'RLGYy', 'RLGYz'
         , 'RMACx', 'RMACy', 'RMACz', 'RMGYx', 'RMGYy', 'RMGYz','mass']
-
+allcols = ['LLACx','LLACy','LLACz','LLGYx','LLGYy','LLGYz','LMACx','LMACy','LMACz','LMGYx','LMGYy','LMGYz',
+           'RLACx','RLACy','RLACz','RLGYx','RLGYy','RLGYz','RMACx','RMACy','RMACz','RMGYx','RMGYy','RMGYz',
+           'mass','height','Lleglen','LkneeWid','LankleWid','Rleglen','RkneeWid','y']
+infoFile = 'subjectInfo.txt'
+out = 'kam2allinfo/'
 if __name__ == '__main__':
-
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
-    lag = 3
-    name = 'S23'
+    lag = 2
+    name = 'S12'
 
     imucols = pd.DataFrame(testList)
-    cols = pd.DataFrame([])
-    for i in range(lag + 1):
-        cols = pd.concat([cols, imucols + str(i)])
 
-
-    data = pd.read_csv('imucom2kam/'+name+'.txt',sep="\t")
-    # usecols = list(filter(lambda x:x[2:4]=='GY',tempIotcols))
-    # usecols.append('mass')
+    data = pd.read_csv('kam2allinfo/'+name +'.txt',sep="\t")
     tempdata = data[testList]
     delayData = delayedData(tempdata,lag)
 
-    usecols = testList
-
-
     lenth = (data.shape)[0]
     useLen = (delayData.shape)[0]
-    massData = data[['mass']].loc[0:useLen-1]
-    X = pd.concat([delayData,massData],axis=1)
+    infoData = data[['mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid']].loc[0:useLen-1]
+
+#=======
+    # demo = pd.read_csv('kam2allinfo/demo.txt', sep="\t")
+    # tempdata = demo[testList]
+    # demodelayData = delayedData(tempdata, lag)
+    #
+    # demolenth = (demo.shape)[0]
+    # demouseLen = (demodelayData.shape)[0]
+    # demoinfoData = demo[['mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid']].loc[
+    #            0:demouseLen - 1]
+    # X_demo = pd.concat([demodelayData,demoinfoData],axis=1)
+    # y_demo = demo[['y']].loc[lag:demolenth]
+# =======
+
+    X = pd.concat([delayData,infoData],axis=1)
     y = data[['y']].loc[lag:lenth]
-    massCol = pd.DataFrame(['mass'])
-    cols = cols.append(massCol)
     print(X.shape)
     print(y.shape)
 
-    seed = 15
+    seed = 156
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
 
-    # model = LinearRegression()
-    # model.fit(X_train, y_train)
-    # y_pred = model.predict(X_test)
-    # predicted = cross_val_predict(model, X, y, cv=10)
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    predicted = cross_val_predict(model, X, y, cv=10)
 
-    alpha = 1e-8
+    alpha = 1e-7
     iter = 1e6
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)
-    y_pred = lassoreg.predict(X_test)
+    y_pred = lassoreg.predict(X_test)#test
+    # demoy_pred = lassoreg.predict(X_demo)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
 
@@ -93,17 +100,10 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(19.20, 9.06))
     p1 = plt.subplot(111)
-    # fig, ax = plt.subplots()
+
 
     # ax.scatter(X_test,y_test)
     # ax.scatter(X_test,y_pred)
-#=====
-    # ax.scatter(y, predicted)
-    # ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    # ax.set_xlabel('Measured')
-    # ax.set_ylabel('Predicted')
-    # plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'seed-' + str(seed) + ".png")
-# =====
 
     p1.scatter(y, predicted)
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
@@ -111,13 +111,14 @@ if __name__ == '__main__':
     p1.set_ylabel('Predicted')
     plt.savefig('outcome/' + name + '-lag-' + 'alpha-' + str(alpha) + '-iter-' + str(iter) + str(lag) + '-seed-' + str(seed) + ".png")
 
+    cols = X.columns
     a = np.fabs(lassoreg.coef_)
     keys = sorted(range(len(a)), key=lambda k: a[k],reverse=True)
     index = []
     sortedpos = []
     for i in keys:
         index.append((lassoreg.coef_)[i])
-        sortedpos.append(cols.iloc[i, 0])
+        sortedpos.append(cols[i])
     print(index)
     print(sortedpos)
 
@@ -133,6 +134,9 @@ if __name__ == '__main__':
     output.write('sorted coef:' + str(index) + '\n')
     output.write('corresponding pos:' + str(sortedpos) + '\n')
     output.close()
+
+
+
     plt.show()
 
 
