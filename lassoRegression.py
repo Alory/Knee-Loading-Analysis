@@ -36,29 +36,38 @@ tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
         , 'RMACx', 'RMACy', 'RMACz', 'RMGYx', 'RMGYy', 'RMGYz','mass']
 
 if __name__ == '__main__':
-    lag = 2
 
-    imucols = pd.DataFrame(tempIotcols[0:24])
+    # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
+    testList = tempIotcols[0:24]
+    lag = 2
+    name = 'S23'
+
+    imucols = pd.DataFrame(testList)
     cols = pd.DataFrame([])
     for i in range(lag + 1):
         cols = pd.concat([cols, imucols + str(i)])
 
-    name = 'S18'
+
     data = pd.read_csv('imucom2kam/'+name+'.txt',sep="\t")
     # usecols = list(filter(lambda x:x[2:4]=='GY',tempIotcols))
     # usecols.append('mass')
-    tempdata = data[tempIotcols[0:-1]]
+    tempdata = data[testList]
     delayData = delayedData(tempdata,lag)
-    print(delayData.shape)
-    usecols = tempIotcols
-    # X = data[usecols]
-    X = delayData#[['LLACx','LLACx1','LLACx2']]
+
+    usecols = testList
+
 
     lenth = (data.shape)[0]
+    useLen = (delayData.shape)[0]
+    massData = data[['mass']].loc[0:useLen-1]
+    X = pd.concat([delayData,massData],axis=1)
     y = data[['y']].loc[lag:lenth]
+    massCol = pd.DataFrame(['mass'])
+    cols = cols.append(massCol)
+    print(X.shape)
     print(y.shape)
 
-    seed = 14
+    seed = 15
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
 
     # model = LinearRegression()
@@ -66,23 +75,13 @@ if __name__ == '__main__':
     # y_pred = model.predict(X_test)
     # predicted = cross_val_predict(model, X, y, cv=10)
 
-    lassoreg = Lasso(alpha=1e-10, normalize=True, max_iter=1e9)
+    alpha = 1e-8
+    iter = 1e6
+    lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
-
-    a = np.fabs(lassoreg.coef_)
-    b = sorted(a,reverse = True)
-    index = []
-    sortedpos = []
-    for i in range(len(b)):
-        pos = np.where(a == b[i])
-        pos = pos[0][0]
-        index.append(a[pos])
-        sortedpos.append(cols.iloc[pos,0])
-    print(index)
-    print(sortedpos)
 
     from sklearn import metrics
 
@@ -110,11 +109,26 @@ if __name__ == '__main__':
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
     p1.set_xlabel('Measured')
     p1.set_ylabel('Predicted')
-    plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'seed-' + str(seed) + ".png")
+    plt.savefig('outcome/' + name + '-lag-' + 'alpha-' + str(alpha) + '-iter-' + str(iter) + str(lag) + '-seed-' + str(seed) + ".png")
+
+    a = np.fabs(lassoreg.coef_)
+    b = sorted(a, reverse=True)
+    index = []
+    sortedpos = []
+    for i in range(len(b)):
+        pos = np.where(a == b[i])
+        pos = pos[0][0]
+        index.append(a[pos])
+        sortedpos.append(cols.iloc[pos, 0])
+    print(index)
+    print(sortedpos)
 
     output = open('outcome/outcome.txt', 'a')
     output.write('\ntrial:' + name + '\n')
+    output.write('seed:' + str(seed) + '\n')
     output.write('kam max:' + str(max(data['y'])) + '\n')
+    output.write('alpha:' + str(alpha) + '\n')
+    output.write('max iter num:' + str(iter) + '\n')
     output.write('MSE:' + str(MSE) + '\n')
     output.write('RMSE:' + str(RMSE) + '\n')
     output.write('sorted coef:' + str(index) + '\n')
