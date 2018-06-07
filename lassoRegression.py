@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 2
-    name = 'S12'
+    name = 'S22'
 
     imucols = pd.DataFrame(testList)
 
@@ -73,20 +73,20 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    seed = 156
+    seed = 16
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
 
-    model = LinearRegression()
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    predicted = cross_val_predict(model, X, y, cv=10)
+    # model = LinearRegression()
+    # model.fit(X_train, y_train)
+    # y_pred = model.predict(X_test)
+    # predicted = cross_val_predict(model, X, y, cv=10)
 
     alpha = 1e-7
     iter = 1e6
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)#test
-    # demoy_pred = lassoreg.predict(X_demo)
+    demoy_pred = lassoreg.predict(X_demo)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
 
@@ -100,10 +100,8 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(19.20, 9.06))
     p1 = plt.subplot(111)
-
-
-    # ax.scatter(X_test,y_test)
-    # ax.scatter(X_test,y_pred)
+    # p1.plot(y_demo)
+    # p1.plot(demoy_pred)
 
     p1.scatter(y, predicted)
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
