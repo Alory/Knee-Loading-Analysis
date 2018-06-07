@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
-    lag = 2
+    lag = 3
     name = 'S23'
 
     imucols = pd.DataFrame(testList)
@@ -112,19 +112,18 @@ if __name__ == '__main__':
     plt.savefig('outcome/' + name + '-lag-' + 'alpha-' + str(alpha) + '-iter-' + str(iter) + str(lag) + '-seed-' + str(seed) + ".png")
 
     a = np.fabs(lassoreg.coef_)
-    b = sorted(a, reverse=True)
+    keys = sorted(range(len(a)), key=lambda k: a[k],reverse=True)
     index = []
     sortedpos = []
-    for i in range(len(b)):
-        pos = np.where(a == b[i])
-        pos = pos[0][0]
-        index.append(a[pos])
-        sortedpos.append(cols.iloc[pos, 0])
+    for i in keys:
+        index.append((lassoreg.coef_)[i])
+        sortedpos.append(cols.iloc[i, 0])
     print(index)
     print(sortedpos)
 
     output = open('outcome/outcome.txt', 'a')
     output.write('\ntrial:' + name + '\n')
+    output.write('lag:' + str(lag) + '\n')
     output.write('seed:' + str(seed) + '\n')
     output.write('kam max:' + str(max(data['y'])) + '\n')
     output.write('alpha:' + str(alpha) + '\n')
