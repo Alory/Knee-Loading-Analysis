@@ -86,7 +86,7 @@ if __name__ == '__main__':
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)#test
-    demoy_pred = lassoreg.predict(X_demo)
+    # demoy_pred = lassoreg.predict(X_demo)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
 
