@@ -14,12 +14,20 @@ if __name__ == '__main__':
         , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
         , 'RLACx', 'RLACy', 'RLACz', 'RLGYx', 'RLGYy', 'RLGYz'
         , 'RMACx', 'RMACy', 'RMACz', 'RMGYx', 'RMGYy', 'RMGYz', 'KAM', 'mass']
+    infoCols = ['subject', 'age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid',
+                   'RankleWid', 'gender_F', 'gender_M']
+
+    filename = 'subjectInfo.txt'
+    info = pd.read_table(filename)
+    info = pd.get_dummies(info)
 
     subjects = os.listdir(testdir[:-1])  # kam file name is same as noraxon file name
     for subjectName in subjects:  # for every subject, subject name : S12_Lau
         subjectData = None
         print(subjectName)
         subjectNum = subjectName.split("_")[0]  # subject number : S12
+
+        subjectInfo = info.loc[info['subject'] == int(subjectNum[1:])]
 
         imuTrialList = os.listdir(norxDir + subjectName)  # imu data of trials
         resultList = filterKamList(resultDir + subjectName)  # kam data of trials
@@ -58,9 +66,19 @@ if __name__ == '__main__':
             usableImudata = imudata[imuOn:imuOff].reset_index().iloc[:, 3:]
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
-            mass = pd.DataFrame([subjectMass[subjectNum]] * usableLen)
-            mass.columns = ['mass']
-            data = pd.concat([usableImudata, kamy, mass], axis=1)
+            # mass = pd.DataFrame([subjectMass[subjectNum]] * usableLen)
+            # mass.columns = ['mass']
+
+            #subject info data
+            value = subjectInfo.iloc[0, 1:10].values
+            test = [list(value)] * usableLen
+            test = pd.DataFrame(test)
+            test.columns = infoCols[1:10]
+
+            subnum = pd.DataFrame([subjectNum] * usableLen)
+            subnum.columns = ['subject']
+
+            data = pd.concat([subnum,usableImudata,test,kamy], axis=1)
 
             # pos1 = "LLGYz"
             # pos2 = "RMGYz"
@@ -79,7 +97,7 @@ if __name__ == '__main__':
 
             subjectData = pd.concat([subjectData,data])
 
-        subjectData.to_csv("imucom2kam/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
+        subjectData.to_csv("kam2allinfo/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
 
 '''
     rate, imudata = readImuData(norxDir + subject + '\Trial_' + trialNum + '.txt')
