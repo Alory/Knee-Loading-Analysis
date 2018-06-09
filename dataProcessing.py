@@ -95,6 +95,15 @@ def readImuData(filename):
         data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return imuRate, data
 
+'''
+read static data(dataframe)
+'''
+def readStaticData(filename):
+    valueCols = [0, 1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 14, 15, 16,
+                 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 34]
+    data = pd.read_table(filename, skiprows=4, sep="\t", usecols=valueCols)  # skip first 4 rows
+    data.columns = imuCols
+    return data
 
 '''
 get the sync point of iot data and imu data
@@ -594,7 +603,10 @@ def delayedData(imudata,lag):
         delayData = pd.concat([delayData,temp],axis=1)
     return delayData
 
-
+def getCaliData(staticData):
+    staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
+    caliData = staticData.iloc[-1:]
+    return caliData
 
 
 

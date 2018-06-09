@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
+from dataProcessing import *
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_predict
 from sklearn.linear_model import Lasso
+import os
 
 def R2(y_test, y_true):
     return 1 - ((y_test - y_true)**2).sum() / ((y_true - y_true.mean())**2).sum()
@@ -43,12 +45,18 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 2
-    name = 'S22'
+    name = 'S23'
+
+    subjects = os.listdir('noraxon')
+    subjectFile = getFile(name,subjects)
+    staticData = readStaticData( 'noraxon/' + subjectFile + "/static.txt")
+    staticData = staticData[testList]
+    caliData = getCaliData(staticData)
 
     imucols = pd.DataFrame(testList)
-
     data = pd.read_csv('kam2allinfo/'+name +'.txt',sep="\t")
     tempdata = data[testList]
+    # tempdata = tempdata.sub(caliData.iloc[0, :])
     delayData = delayedData(tempdata,lag)
 
     lenth = (data.shape)[0]
