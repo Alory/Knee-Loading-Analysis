@@ -31,6 +31,9 @@ if __name__ == '__main__':
 
         imuTrialList = os.listdir(norxDir + subjectName)  # imu data of trials
         resultList = filterKamList(resultDir + subjectName)  # kam data of trials
+        staticData = readStaticData(norxDir + subjectName + "/static.txt")
+        caliData = getCaliData(staticData)
+        caliData = caliData.iloc[:, 2:]
         print(resultList)
 
         frameFile = subjectNum + "_Frame.csv"  # S12_Frame.csv
@@ -64,6 +67,7 @@ if __name__ == '__main__':
             imuOff = imuSyncLag + LOn + usableLen
 #======
             usableImudata = imudata[imuOn:imuOff].reset_index().iloc[:, 3:]
+            usableImudata = usableImudata.sub(caliData.iloc[0, :])
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
             # mass = pd.DataFrame([subjectMass[subjectNum]] * usableLen)
@@ -97,7 +101,7 @@ if __name__ == '__main__':
 
             subjectData = pd.concat([subjectData,data])
 
-        subjectData.to_csv("kam2allinfo/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
+        subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
 
 '''
     rate, imudata = readImuData(norxDir + subject + '\Trial_' + trialNum + '.txt')

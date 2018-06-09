@@ -45,16 +45,16 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 2
-    name = 'S23'
+    name = 'S11'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
-    staticData = readStaticData( 'noraxon/' + subjectFile + "/static.txt")
-    staticData = staticData[testList]
-    caliData = getCaliData(staticData)
+    # staticData = readStaticData( 'noraxon/' + subjectFile + "/static.txt")
+    # staticData = staticData[testList]
+    # caliData = getCaliData(staticData)
 
     imucols = pd.DataFrame(testList)
-    data = pd.read_csv('kam2allinfo/'+name +'.txt',sep="\t")
+    data = pd.read_csv('kam2cali/'+name +'.txt',sep="\t")
     tempdata = data[testList]
     # tempdata = tempdata.sub(caliData.iloc[0, :])
     delayData = delayedData(tempdata,lag)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    seed = 16
+    seed = 1622
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
 
     # model = LinearRegression()
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
     p1.set_xlabel('Measured')
     p1.set_ylabel('Predicted')
-    plt.savefig('outcome/' + name + '-lag-' + 'alpha-' + str(alpha) + '-iter-' + str(iter) + str(lag) + '-seed-' + str(seed) + ".png")
+    plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'alpha-' + str(alpha) + '-iter-' + str(iter) + '-seed-' + str(seed) + ".png")
 
     cols = X.columns
     a = np.fabs(lassoreg.coef_)
