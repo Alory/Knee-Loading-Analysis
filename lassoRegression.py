@@ -44,8 +44,8 @@ out = 'kam2allinfo/'
 if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
-    lag = 2
-    name = 'S11'
+    lag = 1
+    name = 'caliAll'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     # y_pred = model.predict(X_test)
     # predicted = cross_val_predict(model, X, y, cv=10)
 
-    alpha = 1e-7
+    alpha = 1e-5
     iter = 1e6
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)

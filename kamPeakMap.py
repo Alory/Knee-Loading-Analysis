@@ -22,6 +22,7 @@ if __name__ == '__main__':
     info = pd.get_dummies(info)
 
     subjects = os.listdir(testdir[:-1])  # kam file name is same as noraxon file name
+    allData = None
     for subjectName in subjects:  # for every subject, subject name : S12_Lau
         subjectData = None
         print(subjectName)
@@ -100,8 +101,11 @@ if __name__ == '__main__':
             # data.columns = ['LLGYz','RMGYz','KAMy','mass']
 
             subjectData = pd.concat([subjectData,data])
+            allData = pd.concat([allData,data])
 
-        subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
+        # subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
+    allData.to_csv("kam2cali/" + "caliAll.txt", sep="\t", float_format='%.6f',
+                       index=None)  # , header=None, index=None)
 
 '''
     rate, imudata = readImuData(norxDir + subject + '\Trial_' + trialNum + '.txt')

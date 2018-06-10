@@ -29,6 +29,7 @@ iot2imuCols = {'LLACy': 1, 'LLACx': -1, 'LLACz': 1, 'LLGYy': 1, 'LLGYx': -1, 'LL
         , 'RMACy': 1, 'RMACx': -1, 'RMACz': 1, 'RMGYy': 1, 'RMGYx': -1, 'RMGYz': 1}
 iot2imuPos = list(iot2imuCols.keys())
 flags = list(iot2imuCols.values())
+hongkongG = 978.5
 
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
@@ -103,6 +104,8 @@ def readStaticData(filename):
                  20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 34]
     data = pd.read_table(filename, skiprows=4, sep="\t", usecols=valueCols)  # skip first 4 rows
     data.columns = imuCols
+    for pos in iotCols:
+        data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return data
 
 '''
@@ -604,8 +607,11 @@ def delayedData(imudata,lag):
     return delayData
 
 def getCaliData(staticData):
-    staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
+    # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
+    staticData.loc['std'] = staticData.apply(lambda x: x.mean())
     caliData = staticData.iloc[-1:]
+    acx = ['LMACx', 'LLACx', 'RLACx', 'RMACx']
+    caliData[acx] = caliData[acx] - hongkongG
     return caliData
 
 
