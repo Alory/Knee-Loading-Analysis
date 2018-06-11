@@ -6,6 +6,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_predict
 from sklearn.linear_model import Lasso
+from sklearn.preprocessing import PolynomialFeatures
 import os
 
 def R2(y_test, y_true):
@@ -81,16 +82,21 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    seed = 1622
+    seed = 222
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
+    # poly_reg = PolynomialFeatures(degree=2)
+    # X_train = poly_reg.fit_transform(X_train)
+    # X_test = poly_reg.fit_transform(X_test)
 
     # model = LinearRegression()
     # model.fit(X_train, y_train)
     # y_pred = model.predict(X_test)
     # predicted = cross_val_predict(model, X, y, cv=10)
 
-    alpha = 1e-5
-    iter = 1e6
+    alpha = 1e-7
+    iter = 1e7
+
+
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)#test
@@ -115,7 +121,7 @@ if __name__ == '__main__':
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
     p1.set_xlabel('Measured')
     p1.set_ylabel('Predicted')
-    plt.savefig('outcome/' + name + '-lag-' + str(lag) + 'alpha-' + str(alpha) + '-iter-' + str(iter) + '-seed-' + str(seed) + ".png")
+    plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-alpha-' + str(alpha) + '-iter-' + str(iter) + '-seed-' + str(seed) + ".png")
 
     cols = X.columns
     a = np.fabs(lassoreg.coef_)
