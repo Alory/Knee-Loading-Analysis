@@ -638,6 +638,7 @@ def getRotMat(data):
 
     return A
 
+# input trial data and the rotate matrix dictionary, output the calibrated data
 def caliData(data,rotMat):
     acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
               'lmac': ['LMACx', 'LMACy', 'LMACz'],
@@ -652,6 +653,8 @@ def caliData(data,rotMat):
             t = np.dot(A, m.transpose())
             t.shape = [1, 3]
             data.loc[indexs, pos] = t[0]
+
+    return data
 
 
 
