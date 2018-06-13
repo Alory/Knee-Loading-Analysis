@@ -31,6 +31,9 @@ iot2imuPos = list(iot2imuCols.keys())
 flags = list(iot2imuCols.values())
 hongkongG = 978.5
 
+std = np.array([hongkongG, 0, 0])
+std.shape = [3, 1]
+
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
 
@@ -610,14 +613,45 @@ def getCaliData(staticData):
     # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
     staticData.loc['std'] = staticData.apply(lambda x: x.mean())
     caliData = staticData.iloc[-1:]
-    acx = ['LMACx', 'LLACx', 'RLACx', 'RMACx']
-    caliData[acx] = caliData[acx] - hongkongG
-    return caliData
+    # acx = ['LMACx', 'LLACx', 'RLACx', 'RMACx']
+    # caliData[acx] = caliData[acx] - hongkongG
+
+    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
+              'lmac': ['LMACx', 'LMACy', 'LMACz'],
+              'rlac': ['RLACx', 'RLACy', 'RLACz'],
+              'rmac': ['RMACx', 'RMACy', 'RMACz']}
+    rotMat = {}
+    for axis in acAxis:
+        data = caliData[acAxis[axis]]
+        A = getRotMat(data)
+        rotMat[axis] = A
 
 
+    return caliData,rotMat
 
+# according to 3 axis accelerometer data to get the rotate matrix
+def getRotMat(data):
+    data = data.values
+    k = np.dot(data.transpose(), data)
+    k = k[0][0]
+    A = (np.dot(std, data)) / k
 
+    return A
 
+def caliData(data,rotMat):
+    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
+              'lmac': ['LMACx', 'LMACy', 'LMACz'],
+              'rlac': ['RLACx', 'RLACy', 'RLACz'],
+              'rmac': ['RMACx', 'RMACy', 'RMACz']}
+
+    for indexs in data.index:
+        for axis in acAxis:
+            pos = acAxis[axis]
+            A = rotMat[axis]
+            m = data.loc[indexs, pos]
+            t = np.dot(A, m.transpose())
+            t.shape = [1, 3]
+            data.loc[indexs, pos] = t[0]
 
 
 
