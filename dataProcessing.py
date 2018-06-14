@@ -32,7 +32,7 @@ flags = list(iot2imuCols.values())
 hongkongG = 978.5
 
 std = np.array([hongkongG, 0, 0])
-std.shape = [3, 1]
+std = np.mat(std)#.transpose()
 
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
@@ -623,11 +623,46 @@ def getCaliData(staticData):
     rotMat = {}
     for axis in acAxis:
         data = caliData[acAxis[axis]]
-        A = getRotMat(data)
-        rotMat[axis] = A
+        data = np.mat(data)
+        # data = data.transpose()
+        R,t = rigid_transform(data)
+        rotMat[axis] = [R,t]
 
 
     return caliData,rotMat
+
+
+# B = R*A + t
+# get the rotation matrix and translation vector r and t
+def rigid_transform(A):
+    print(A)
+    B = std
+    assert len(A) == len(B)
+
+    N = A.shape[0];  # total points
+
+    centroid_A = np.mean(A, axis=0)
+    centroid_B = np.mean(B, axis=0)
+
+    # centre the points
+    AA = A - np.tile(centroid_A, (N, 1))
+    BB = B - np.tile(centroid_B, (N, 1))
+
+    # dot is matrix multiplication for array
+    H = np.transpose(AA) * BB
+
+    U, S, Vt = np.linalg.svd(H)
+
+    R = Vt.T * U.T
+
+    # special reflection case
+    if np.linalg.det(R) < 0:
+        Vt[2, :] *= -1
+        R = Vt.T * U.T
+
+    t = -R * centroid_A.T + centroid_B.T
+
+    return R, t
 
 # according to 3 axis accelerometer data to get the rotate matrix
 def getRotMat(data):
@@ -648,11 +683,13 @@ def caliData(data,rotMat):
     for indexs in data.index:
         for axis in acAxis:
             pos = acAxis[axis]
-            A = rotMat[axis]
+            R = rotMat[axis][0]
+            t = rotMat[axis][1]
             m = data.loc[indexs, pos]
-            t = np.dot(A, m.transpose())
-            t.shape = [1, 3]
-            data.loc[indexs, pos] = t[0]
+            out = R*m.T + t
+            out.shape = [1, 3]
+            out = np.array(out)
+            data.loc[indexs, pos] = out[0]
 
     return data
 
