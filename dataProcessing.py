@@ -12,6 +12,8 @@ import pylab as pl
 from scipy import interpolate
 from scipy import signal, fftpack
 import sys
+from math import acos, atan2, cos, pi, sin
+import math
 from numpy import NaN, Inf, arange, isscalar, asarray, array
 
 # imu raw data columns
@@ -32,7 +34,6 @@ flags = list(iot2imuCols.values())
 hongkongG = 978.5
 
 std = np.array([hongkongG, 0, 0])
-std = np.mat(std)#.transpose()
 
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
@@ -609,99 +610,7 @@ def delayedData(imudata,lag):
         delayData = pd.concat([delayData,temp],axis=1)
     return delayData
 
-def getCaliData(staticData):
-    # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
-    staticData.loc['std'] = staticData.apply(lambda x: x.mean())
-    caliData = staticData.iloc[-1:]
-    # acx = ['LMACx', 'LLACx', 'RLACx', 'RMACx']
-    # caliData[acx] = caliData[acx] - hongkongG
-
-    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
-              'lmac': ['LMACx', 'LMACy', 'LMACz'],
-              'rlac': ['RLACx', 'RLACy', 'RLACz'],
-              'rmac': ['RMACx', 'RMACy', 'RMACz']}
-    rotMat = {}
-    for axis in acAxis:
-        data = caliData[acAxis[axis]]
-        data = np.mat(data)
-        # data = data.transpose()
-        R,t = rigid_transform(data)
-        rotMat[axis] = [R,t]
-
-
-    return caliData,rotMat
-
-
-# B = R*A + t
-# get the rotation matrix and translation vector r and t
-def rigid_transform(A):
-    print(A)
-    B = std
-    assert len(A) == len(B)
-
-    N = A.shape[0];  # total points
-
-    centroid_A = np.mean(A, axis=0)
-    centroid_B = np.mean(B, axis=0)
-
-    # centre the points
-    AA = A - np.tile(centroid_A, (N, 1))
-    BB = B - np.tile(centroid_B, (N, 1))
-
-    # dot is matrix multiplication for array
-    H = np.transpose(AA) * BB
-
-    U, S, Vt = np.linalg.svd(H)
-
-    R = Vt.T * U.T
-
-    # special reflection case
-    if np.linalg.det(R) < 0:
-        Vt[2, :] *= -1
-        R = Vt.T * U.T
-
-    t = -R * centroid_A.T + centroid_B.T
-
-    return R, t
-
-# according to 3 axis accelerometer data to get the rotate matrix
-def getRotMat(data):
-    data = data.values
-    k = np.dot(data.transpose(), data)
-    k = k[0][0]
-    A = (np.dot(std, data)) / k
-
-    return A
-
-# input trial data and the rotate matrix dictionary, output the calibrated data
-def caliData(data,rotMat):
-    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
-              'lmac': ['LMACx', 'LMACy', 'LMACz'],
-              'rlac': ['RLACx', 'RLACy', 'RLACz'],
-              'rmac': ['RMACx', 'RMACy', 'RMACz']}
-
-    for indexs in data.index:
-        for axis in acAxis:
-            pos = acAxis[axis]
-            R = rotMat[axis][0]
-            t = rotMat[axis][1]
-            m = data.loc[indexs, pos]
-            out = R*m.T + t
-            out.shape = [1, 3]
-            out = np.array(out)
-            data.loc[indexs, pos] = out[0]
-
-    return data
-
-# caiculate only the rotation matrix
-import numpy as np
-from math import acos, atan2, cos, pi, sin
-from numpy import array, cross, dot, float64, hypot, zeros
-from numpy.linalg import norm
-import math
-
-
-def R_2vect(vector_orig, vector_fin):
+def rotation_matrix(vector_orig, vector_fin):
     """Calculate the rotation matrix required to rotate from one vector to another.
     For the rotation of one vector to another, there are an infinit series of rotation matrices
     possible.  Due to axially symmetry, the rotation axis can be any vector lying in the symmetry
@@ -722,12 +631,12 @@ def R_2vect(vector_orig, vector_fin):
     """
 
     # Convert the vectors to unit vectors.
-    vector_orig = vector_orig / norm(vector_orig)
-    vector_fin = vector_fin / norm(vector_fin)
+    vector_orig = vector_orig / np.linalg.norm(vector_orig)
+    vector_fin = vector_fin / np.linalg.norm(vector_fin)
 
     # The rotation axis (normalised).
-    axis = cross(vector_orig, vector_fin)
-    axis_len = norm(axis)
+    axis = np.cross(vector_orig, vector_fin)
+    axis_len = np.linalg.norm(axis)
     if axis_len != 0.0:
         axis = axis / axis_len
 
@@ -737,7 +646,7 @@ def R_2vect(vector_orig, vector_fin):
     z = axis[2]
 
     # The rotation angle.
-    angle = acos(dot(vector_orig, vector_fin))
+    angle = acos(np.dot(vector_orig, vector_fin))
 
     # Trig functions (only need to do this maths once!).
     ca = cos(angle)
@@ -757,27 +666,46 @@ def R_2vect(vector_orig, vector_fin):
 
     return R
 
+def getCaliData(staticData):
+    # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
+    staticData.loc['std'] = staticData.apply(lambda x: x.mean())
+    caliData = staticData.iloc[-1:]
+    # acx = ['LMACx', 'LLACx', 'RLACx', 'RMACx']
+    # caliData[acx] = caliData[acx] - hongkongG
 
-def rotation_matrix(A, B):
-    # a and b are in the form of numpy array
-
-    ax = A[0]
-    ay = A[1]
-    az = A[2]
-
-    bx = B[0]
-    by = B[1]
-    bz = B[2]
-
-    au = A / (np.sqrt(ax * ax + ay * ay + az * az))
-    bu = B / (np.sqrt(bx * bx + by * by + bz * bz))
-
-    R = np.array([[bu[0] * au[0], bu[0] * au[1], bu[0] * au[2]], [bu[1] * au[0], bu[1] * au[1], bu[1] * au[2]],
-                  [bu[2] * au[0], bu[2] * au[1], bu[2] * au[2]]])
-
-    return (R)
-
-
+    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
+              'lmac': ['LMACx', 'LMACy', 'LMACz'],
+              'rlac': ['RLACx', 'RLACy', 'RLACz'],
+              'rmac': ['RMACx', 'RMACy', 'RMACz']}
+    rotMat = {}
+    for axis in acAxis:
+        data = caliData[acAxis[axis]]
+        data = (np.array(data))[0]
+        # print(data,std)
+        R = rotation_matrix(data, std)
+        index = np.linalg.norm(std) / np.linalg.norm(data)
+        rotMat[axis] = [R,index]
 
 
+    return caliData,rotMat
+
+# input trial data and the rotate matrix dictionary, output the calibrated data
+def calibrateData(data,rotMat):
+    acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
+              'lmac': ['LMACx', 'LMACy', 'LMACz'],
+              'rlac': ['RLACx', 'RLACy', 'RLACz'],
+              'rmac': ['RMACx', 'RMACy', 'RMACz']}
+
+    for indexs in data.index:
+        for axis in acAxis:
+            pos = acAxis[axis]
+            R = rotMat[axis][0]
+            coef = rotMat[axis][1]
+            m = data.loc[indexs, pos]
+            out = coef * np.dot(R,m)
+            out.shape = [1, 3]
+            out = np.array(out)
+            data.loc[indexs, pos] = out[0]
+
+    return data
 

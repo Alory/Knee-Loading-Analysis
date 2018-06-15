@@ -33,8 +33,9 @@ if __name__ == '__main__':
         imuTrialList = os.listdir(norxDir + subjectName)  # imu data of trials
         resultList = filterKamList(resultDir + subjectName)  # kam data of trials
         staticData = readStaticData(norxDir + subjectName + "/static.txt")
-        caliData = getCaliData(staticData)
-        caliData = caliData.iloc[:, 2:]
+        caliData, rotMat = getCaliData(staticData)
+        # caliData = getCaliData(staticData)
+        # caliData = caliData.iloc[:, 2:]
         print(resultList)
 
         frameFile = subjectNum + "_Frame.csv"  # S12_Frame.csv
@@ -51,6 +52,7 @@ if __name__ == '__main__':
                                         & (frameRange["L/R_" + foot] == 1)]
             # get imu data, iot data and imu sampling rate
             rate, imudata = readImuData(norxDir + subjectName + "/Trial_" + trialNum + ".txt")
+
             kamdata = readKam(resultDir + subjectName + "/" + fileName,imurate = rate)
             LOn = trialRange["On"].iat[0]
             LOff = trialRange["Off"].iat[0]
@@ -68,7 +70,8 @@ if __name__ == '__main__':
             imuOff = imuSyncLag + LOn + usableLen
 #======
             usableImudata = imudata[imuOn:imuOff].reset_index().iloc[:, 3:]
-            usableImudata = usableImudata.sub(caliData.iloc[0, :])
+            usableImudata = calibrateData(usableImudata, rotMat)
+            # usableImudata = usableImudata.sub(caliData.iloc[0, :])
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
             # mass = pd.DataFrame([subjectMass[subjectNum]] * usableLen)
