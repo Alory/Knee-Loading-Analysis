@@ -667,6 +667,7 @@ def rotation_matrix(vector_orig, vector_fin):
     return R
 
 def getCaliData(staticData):
+    staticData = staticData[iotCols]
     # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
     staticData.loc['std'] = staticData.apply(lambda x: x.mean())
     caliData = staticData.iloc[-1:]
@@ -706,6 +707,15 @@ def calibrateData(data,rotMat):
             out.shape = [1, 3]
             out = np.array(out)
             data.loc[indexs, pos] = out[0]
+
+    return data
+
+def gyroCali(zeroOffset,data):
+    acCols = list(filter(lambda x: 'AC' in x, iotCols))
+
+    cali = zeroOffset.iloc[0, :]
+    cali[acCols] = 0.0
+    data = data.sub(cali)
 
     return data
 

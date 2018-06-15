@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'S22'
+    name = 'caliAll'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    seed = 234
+    seed = 2341
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
     # poly_reg = PolynomialFeatures(degree=2)
     # X_train = poly_reg.fit_transform(X_train)

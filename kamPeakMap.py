@@ -63,14 +63,21 @@ if __name__ == '__main__':
                 LOn = 2 * LOn
                 LOff = LOn + usableLen
 
+            shift = int(usableLen / 5)
+            usableLen = usableLen - 2 * shift
+            LOn = LOn + shift
+            LOff = LOn + usableLen
+
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
             imuSyncLag = imuSyncOnIndex[0] - 1
 
-            imuOn = imuSyncLag + LOn
-            imuOff = imuSyncLag + LOn + usableLen
+
+            imuOn = imuSyncLag + LOn +shift
+            imuOff = imuOn + usableLen
 #======
             usableImudata = imudata[imuOn:imuOff].reset_index().iloc[:, 3:]
             usableImudata = calibrateData(usableImudata, rotMat)
+            usableImudata = gyroCali(caliData,usableImudata)
             # usableImudata = usableImudata.sub(caliData.iloc[0, :])
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
