@@ -385,22 +385,20 @@ def getDataLagFFT16(norData,iotData):
     return lags
 
 #slice the usable iot data for training
-def getIot2Kam(lags,iotData,kamData,imuOn,imuOff,shift=0):
+def getIot2Kam(lags,iotData,imuOn,imuOff,shift=0):
     usableLen = imuOff - imuOn
-    #取出最大值
-    # iot2kam = pd.DataFrame([])
-    iot2kam = pd.DataFrame([max(kamData.y)]*(usableLen + 2*shift))
-    iot2kam.columns = ['KAMy']
+    iot2kam = pd.DataFrame([])
+    # iot2kam = pd.DataFrame([max(kamData.y)]*(usableLen + 2*shift))
+    # iot2kam.columns = ['y']
+
     for ipos in range(len(iotCols)):
         iotPos = iotCols[ipos]
-        norxPos = iot2imuPos[ipos]
-        flag = flags[ipos]
 
         iotOnLL = imuOn - lags[iotPos] - shift
         iotOffLL = imuOff - lags[iotPos] + shift
         iposData = iotData[iotPos][iotOnLL:iotOffLL].reset_index().iloc[:,1]
-        # iot2kam = iot2kam.join(iotData, axis=1)
-        iot2kam = pd.concat([iposData,iot2kam], axis=1)
+        iot2kam = pd.concat([iot2kam,iposData], axis=1)
+    # iot2kam = pd.concat([iot2kam, kamy, subjectMass], axis=1)
     return iot2kam
 
 #slice the noraxon data for training
