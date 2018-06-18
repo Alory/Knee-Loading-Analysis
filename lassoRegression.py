@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'caliAll'
+    name = 'iot-all'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # caliData = getCaliData(staticData)
 
     imucols = pd.DataFrame(testList)
-    data = pd.read_csv('kam2cali/'+name +'.txt',sep="\t")
+    data = pd.read_csv('kam2allinfo/'+name +'.txt',sep="\t")
     tempdata = data[testList]
     # tempdata = tempdata.sub(caliData.iloc[0, :])
     delayData = delayedData(tempdata,lag)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    seed = 2341
+    seed = 778
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
     # poly_reg = PolynomialFeatures(degree=2)
     # X_train = poly_reg.fit_transform(X_train)
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     print("RMSE:", RMSE)
     # print("R2:",R2(y_pred,y_test))
 
-    plt.figure(figsize=(19.20, 9.06))
+    plt.figure(figsize=(9.06, 9.06))
     p1 = plt.subplot(111)
     # p1.plot(y_demo)
     # p1.plot(demoy_pred)
@@ -139,10 +139,13 @@ if __name__ == '__main__':
     output.write('lag:' + str(lag) + '\n')
     output.write('seed:' + str(seed) + '\n')
     output.write('kam max:' + str(max(data['y'])) + '\n')
+    mean = np.mean(data['y'])
+    output.write('kam mean:' + str(mean) + '\n')
     output.write('alpha:' + str(alpha) + '\n')
     output.write('max iter num:' + str(iter) + '\n')
     output.write('MSE:' + str(MSE) + '\n')
     output.write('RMSE:' + str(RMSE) + '\n')
+    output.write('RMSE / mean:' + str(RMSE/mean) + '\n')
     output.write('sorted coef:' + str(index) + '\n')
     output.write('corresponding pos:' + str(sortedpos) + '\n')
     output.close()

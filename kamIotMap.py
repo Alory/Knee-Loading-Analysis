@@ -25,7 +25,7 @@ if __name__ == '__main__':
     shift = 10
 
     subjects = os.listdir(testdir[:-1])#kam file name is same as noraxon file name
-    subjects = ['S8_Yeung']
+    # subjects = ['S7_Lee']
     iotFiles = os.listdir(iotdatadir[:-1])
     tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
@@ -51,6 +51,11 @@ if __name__ == '__main__':
         imuTrialList = os.listdir(norxDir + subjectName)#imu data of trials
         resultList = filterKamList(resultDir + subjectName)#kam data of trials
         print(resultList)
+
+        if(subjectNum != 'S18'):
+            norxRate,norxstaticData = readImuData(norxDir + subjectName + "/static.txt")
+            staticData = readIotData(iotdatadir + iotSubjectFile + "/modified-static.txt",norxRate)
+            caliData, rotMat = getCaliData(staticData)
 
         frameFile = subjectNum + "_Frame.csv"#S12_Frame.csv
         frameRange = getFrame(resultDir + subjectName + "/" + frameFile)#result/S12_Lau/S12_Frame.csv
@@ -78,6 +83,11 @@ if __name__ == '__main__':
                 LOn = 2 * LOn
                 LOff = LOn + usableLen
 
+            shift = int(usableLen / 6)
+            usableLen = usableLen - 2 * shift
+            LOn = LOn + shift
+            LOff = LOn + usableLen
+
             usableKam = kamdata[LOn:LOff]#usable kam
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
             imuSyncLag = imuSyncOnIndex[0] - 1
@@ -91,10 +101,12 @@ if __name__ == '__main__':
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
             iot2kam = getIot2Kam(lags,iotdata,imuOn,imuOff)
-            if (trialNum == '4' and foot == 'L'):
-                print(lags)
-                print(iot2kam.shape)
-                print(usableLen)
+            if (ifcontainNan(iot2kam)):
+                continue
+
+            if (subjectNum != 'S18'):
+                iot2kam = calibrateData(iot2kam, rotMat)
+                iot2kam = gyroCali(caliData, iot2kam)
 
             # subject info data
             value = subjectInfo.iloc[0, 1:10].values
@@ -110,9 +122,10 @@ if __name__ == '__main__':
             subnum.columns = ['subject']
 
             data = pd.concat([subnum,trialNumPd,iot2kam,test,kamy],axis=1)
-            data.to_csv("kam2allinfo/" + 'iot-' + subjectNum + '-' + trialNum + foot + ".txt", sep="\t", float_format='%.4f',index=None)
-            # subjectData = pd.concat([data,subjectData])
-        # subjectData.to_csv("kam2allinfo/" + 'iot-' + subjectNum + ".txt", sep="\t", float_format='%.4f',
+            # data.to_csv("kam2allinfo/" + 'iot-' + subjectNum + '-' + trialNum + foot + ".txt", sep="\t", float_format='%.4f',index=None)
+            subjectData = pd.concat([data,subjectData])
+            allData = pd.concat([data,allData])
+        # subjectData.to_csv("kam2allinfo/" + 'iot-' + subjectNum + ".txt", sep="\t", float_format='%.6f',
         #                        index=None)  # , header=None, index=None)
 
-        # subjectData.to_csv("kam2allinfo/" + 'iot-' + subjectNum + ".txt", sep="\t",float_format='%.4f',index=None)
+    allData.to_csv("kam2allinfo/" + 'iot-all.txt', sep="\t",float_format='%.6f',index=None)
