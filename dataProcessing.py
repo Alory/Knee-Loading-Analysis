@@ -38,6 +38,10 @@ std = np.array([hongkongG, 0, 0])
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
 
+'''
+read kam data and then interpolate data(up sampling).
+use linear interpolating.
+'''
 def interpolateData(data):
     m = len(data)
     n = len(data[0])
@@ -48,26 +52,33 @@ def interpolateData(data):
     newData = f(y, xnew)
     return newData
 
+def ifcontainNan(data):
+    return (data.isnull().sum().sum() > 0)
+
 
 '''
-read kam data and then interpolate data(up sampling).
+read kam data and then interpolate data(down sampling).
 use linear interpolating.
+for the case that the kam frequency is 200 while noraxon and iot samling rate is 100
 '''
-def interpolateDataTest(file, num):
-    data = np.loadtxt(file, delimiter="\t", skiprows=1)
-    m = len(data)
-    n = len(data[0])
-    x = np.linspace(1, m, m)
+def interpolateDfData(data, num):
+    dataIndex = data.index
+    m = (data.shape)[0]
+    n = (data.shape)[1]
+    data = np.array(data)
+    # m = len(data)
+    # n = len(data[0])
+    x = np.linspace(dataIndex[0], dataIndex[-1], m)
     y = np.linspace(1, n, n)
-    xnew = np.linspace(0, m, num)
+    xnew = np.linspace(dataIndex[0], dataIndex[-1], num)
     f = interpolate.interp2d(y, x, data, kind='linear')
     new = f(y, xnew)
-    df = pd.DataFrame(new, columns=['x', 'y', 'z'])
-    pl.plot(data[:, 1], label='data')
-    pl.plot(new[:, 1], label='new')
-    pl.legend(loc="lower right")
-    pl.show()
-
+    df = pd.DataFrame(new)
+    df.columns = ['x', 'y', 'z']
+    start = int(dataIndex[0]/2)
+    newindex = np.linspace(start, start + num -1, num)
+    df.index = newindex
+    return df
 
 '''
 read iot data and process the dummy elements
@@ -399,6 +410,8 @@ def getIot2Kam(lags,iotData,imuOn,imuOff,shift=0):
         iposData = iotData[iotPos][iotOnLL:iotOffLL].reset_index().iloc[:,1]
         iot2kam = pd.concat([iot2kam,iposData], axis=1)
     # iot2kam = pd.concat([iot2kam, kamy, subjectMass], axis=1)
+    # if(ifcontainNan(iot2kam)):
+    #     iot2kam = interplateDf(iot2kam,usableLen)
     return iot2kam
 
 #slice the noraxon data for training
@@ -437,6 +450,7 @@ def getFile(name,fileList):
     for file in fileList:
         if (name in file):
             return file
+    return -1
 
 def rfft_xcorr(x, y):
     M = len(x) + len(y) - 1
