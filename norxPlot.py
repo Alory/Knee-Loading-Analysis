@@ -42,6 +42,7 @@ if __name__ == '__main__':
             usableLen = int(usableLen / 2)
             kam = kam[LOn:LOff]
             kam = interpolateDfData(kam, usableLen)
+            usableLen = (kam.shape)[0] - 1
             LOn = int(LOn/2)
             LOff = LOn + usableLen
     else:

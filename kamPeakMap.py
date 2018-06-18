@@ -62,9 +62,9 @@ if __name__ == '__main__':
             if (rate == 100):
                 usableLen = LOff - LOn
                 if (intsubNum > 25):
-                    usableLen = int(usableLen / 2)
                     kamdata = kamdata[LOn:LOff]
                     kamdata = interpolateDfData(kamdata, int(usableLen / 2))
+                    usableLen = (kamdata.shape)[0]
                     LOn = int(LOn / 2)
                     LOff = LOn + usableLen
             else:
@@ -81,6 +81,9 @@ if __name__ == '__main__':
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
             imuSyncLag = imuSyncOnIndex[0] - 1
 
+            kamy = kamdata[LOn:LOff].y
+            kamy = kamy.reset_index().iloc[:, 1]
+            usableLen = (kamy.shape)[0]
 
             imuOn = imuSyncLag + LOn +shift
             imuOff = imuOn + usableLen
@@ -89,10 +92,6 @@ if __name__ == '__main__':
             usableImudata = calibrateData(usableImudata, rotMat)
             usableImudata = gyroCali(caliData,usableImudata)
             # usableImudata = usableImudata.sub(caliData.iloc[0, :])
-            kamy = kamdata[LOn:LOff].y
-            kamy = kamy.reset_index().iloc[:, 1]
-            # mass = pd.DataFrame([subjectMass[subjectNum]] * usableLen)
-            # mass.columns = ['mass']
 
             #subject info data
             value = subjectInfo.iloc[0, 1:10].values
