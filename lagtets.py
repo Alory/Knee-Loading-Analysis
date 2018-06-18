@@ -17,18 +17,22 @@ if __name__ == '__main__':
     norxDir = "noraxon/"
     resultDir = "test/"
     testdir = "test/"
-    subject = "S22_Chen"
-    dir = "S22_0327-subject1"
-    trialNum = '2'
-    foot = "R"
+    subject = "S7_Lee"
+    dir = "S7_0306-subject2"
+    trialNum = '1'
+    foot = "L"
+    subjectNum = int(subject.split("_")[0][1:])
 
     rate, imudata = readImuData(norxDir + subject + '\Trial_'+trialNum+'.txt')
     iotFileList = os.listdir(iotdatadir + dir)
+    print(iotFileList)
     # resultList = filterKamList(resultDir + subject)
 
+    print(iotFileList[int(trialNum) - 1])
     iotdata = readIotData(iotdatadir + dir + "\\" + iotFileList[int(trialNum)-1], rate)
+
     frameRange = getFrame(resultDir + subject + "\\" + subject.split("_")[0] + '_Frame.csv')
-    kam = readKam(resultDir + subject + "\Trial_"+trialNum+"_"+foot+"_12.txt", rate)
+    kam = readKam(resultDir + subject + "\Trial_"+trialNum+"_"+foot+"_1.txt", rate)
     # for iotpos in iotCols:
     #     imupos = iot2imuPos[iotCols.index(iotpos)]
     #     getIotImuLagFFT(iotdata[iotpos], imudata[imupos], flags[iotCols.index(iotpos)])
@@ -37,11 +41,11 @@ if __name__ == '__main__':
     trialRange = frameRange.loc[(frameRange["Trial No."] == int(trialNum)) & (frameRange["L/R_"+foot] == 1)]
     LOn = trialRange["On"].iat[0]
     LOff = trialRange["Off"].iat[0]
-    if(rate == 100):
-        usableLen = LOff - LOn + 1
+    if (rate == 100):
+        usableLen = LOff - LOn
     else:
-        usableLen = 2*(LOff - LOn + 1)
-        LOn = 2*LOn - 2
+        usableLen = 2 * (LOff - LOn)
+        LOn = 2 * LOn
         LOff = LOn + usableLen
 
     maxtab, mintab = peakdet(kam.y,0.002)
@@ -69,10 +73,11 @@ if __name__ == '__main__':
     flag1 = flags[iotCols.index(pos1)]
     flag2 = flags[iotCols.index(pos2)]
 
-    iotOnLL = imuOn - lags[pos1] - 10
-    iotOffLL = imuOff - lags[pos1] + 10
-    iotOnLM = imuOn - lags[pos2] - 10
-    iotOffLM = imuOff - lags[pos2] + 10
+    shift = 0
+    iotOnLL = imuOn - lags[pos1] - shift
+    iotOffLL = imuOff - lags[pos1] + shift
+    iotOnLM = imuOn - lags[pos2] - shift
+    iotOffLM = imuOff - lags[pos2] + shift
 
     print("LOn,LOff:",LOn,LOff)
     print("imuOn,imuOff:",imuOn,imuOff)
