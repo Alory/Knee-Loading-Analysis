@@ -22,11 +22,13 @@ if __name__ == '__main__':
     info = pd.get_dummies(info)
 
     subjects = os.listdir(testdir[:-1])  # kam file name is same as noraxon file name
+    subjects = ['S28_Chan']
     allData = None
     for subjectName in subjects:  # for every subject, subject name : S12_Lau
         subjectData = None
         print(subjectName)
         subjectNum = subjectName.split("_")[0]  # subject number : S12
+        intsubNum = int(subjectNum[1:])
 
         subjectInfo = info.loc[info['subject'] == int(subjectNum[1:])]
 
@@ -54,19 +56,27 @@ if __name__ == '__main__':
             rate, imudata = readImuData(norxDir + subjectName + "/Trial_" + trialNum + ".txt")
 
             kamdata = readKam(resultDir + subjectName + "/" + fileName,imurate = rate)
+
             LOn = trialRange["On"].iat[0]
             LOff = trialRange["Off"].iat[0]
             if (rate == 100):
                 usableLen = LOff - LOn
+                if (intsubNum > 25):
+                    usableLen = int(usableLen / 2)
+                    kamdata = kamdata[LOn:LOff]
+                    kamdata = interpolateDfData(kamdata, int(usableLen / 2))
+                    LOn = int(LOn / 2)
+                    LOff = LOn + usableLen
             else:
                 usableLen = 2 * (LOff - LOn)
                 LOn = 2 * LOn
                 LOff = LOn + usableLen
 
-            shift = int(usableLen / 5)
-            usableLen = usableLen - 2 * shift
-            LOn = LOn + shift
-            LOff = LOn + usableLen
+            shift = 0
+            # shift = int(usableLen / 6)
+            # usableLen = usableLen - 2 * shift
+            # LOn = LOn + shift
+            # LOff = LOn + usableLen
 
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
             imuSyncLag = imuSyncOnIndex[0] - 1
@@ -113,9 +123,9 @@ if __name__ == '__main__':
             subjectData = pd.concat([subjectData,data])
             allData = pd.concat([allData,data])
 
-        # subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
-    allData.to_csv("kam2cali/" + "caliAll.txt", sep="\t", float_format='%.6f',
-                       index=None)  # , header=None, index=None)
+        subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)#, header=None, index=None)
+    # allData.to_csv("kam2cali/" + "caliAll.txt", sep="\t", float_format='%.6f',
+    #                    index=None)  # , header=None, index=None)
 
 '''
     rate, imudata = readImuData(norxDir + subject + '\Trial_' + trialNum + '.txt')

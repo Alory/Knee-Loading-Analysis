@@ -15,11 +15,12 @@ imuCols = ['time', 'syncOn', 'LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz
 if __name__ == '__main__':
     iotdatadir = "iot/"
     norxDir = "noraxon/"
-    resultDir = "test/"
+    resultDir = "result/"
     testdir = "test/"
-    subject = "S29_Mok"
+    subject = "S28_Chan"
     trialNum = '7'
-    foot = "R"
+    foot = "L"
+    subjectNum = int(subject.split("_")[0][1:])
 
     rate, imudata = readImuData(norxDir + subject + '\Trial_'+trialNum+'.txt')
     # resultList = filterKamList(resultDir + subject)
@@ -35,11 +36,17 @@ if __name__ == '__main__':
     trialRange = frameRange.loc[(frameRange["Trial No."] == int(trialNum)) & (frameRange["L/R_"+foot] == 1)]
     LOn = trialRange["On"].iat[0]
     LOff = trialRange["Off"].iat[0]
-    if(rate == 100):
-        usableLen = LOff - LOn + 1
+    if (rate == 100):
+        usableLen = LOff - LOn
+        if(subjectNum > 25):
+            usableLen = int(usableLen / 2)
+            kam = kam[LOn:LOff]
+            kam = interpolateDfData(kam, usableLen)
+            LOn = int(LOn/2)
+            LOff = LOn + usableLen
     else:
-        usableLen = 2*(LOff - LOn + 1)
-        LOn = 2*LOn - 2
+        usableLen = 2 * (LOff - LOn)
+        LOn = 2 * LOn
         LOff = LOn + usableLen
 
     maxtab, mintab = peakdet(kam.y,0.002)
@@ -47,7 +54,7 @@ if __name__ == '__main__':
 
     imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
     imuSyncLag = imuSyncOnIndex[0] - 1
-    imuSyncLag = 0
+    # imuSyncLag = 0
 
     imuOn = imuSyncLag + LOn
     imuOff = imuSyncLag + LOn + usableLen
@@ -100,7 +107,7 @@ if __name__ == '__main__':
     p2.plot(imudata[imuPos2][imuOn:imuOff])
     p5.plot(kam[LOn:LOff].y)
 
-    imumaxindex = array(maxtab)[:, 0]+imuSyncLag
+    # imumaxindex = array(maxtab)[:, 0]+imuSyncLag
     # maxvalue1 = list(map(lambda x: imudata[imuPos1][x], imumaxindex))
     # maxvalue2 = list(map(lambda x: imudata[imuPos2][x], imumaxindex))
     p6.plot(imudata[imuPos1])  # [imuOn:imuOff])
@@ -109,7 +116,7 @@ if __name__ == '__main__':
     # p7.scatter(imumaxindex, maxvalue2, color='blue')
 
     p8.plot(kam.y)
-    p8.scatter(array(maxtab)[:, 0]+3, array(maxtab)[:, 1], color='blue')
+    # p8.scatter(array(maxtab)[:, 0]+3, array(maxtab)[:, 1], color='blue')
 
     pl.show()
     # pl.savefig(subject + "-trial" + trialNum + ".png")
