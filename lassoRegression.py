@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_predict
-from sklearn.linear_model import Lasso
+from sklearn.linear_model import LassoCV
 from sklearn.preprocessing import PolynomialFeatures
 import os
 from sklearn.externals import joblib
@@ -85,17 +85,18 @@ if __name__ == '__main__':
     print(y.shape)
 
     seed = 778
-    X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
     alpha = 1e-7
     iter = 1e7
-    tol = 0.0001
+    tol = 0.00001
 
 
-    lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter,tol=tol)
-    lassoreg.fit(X_train, y_train)
+    lassoreg = LassoCV(cv=10,tol=tol,max_iter=iter,normalize=False).fit(X, y)
+    # lassoreg.fit(X_train, y_train)
+    alpha = lassoreg.alpha_
     joblib.dump(lassoreg, 'sliced-lasso.model')
 
-    predicted = cross_val_predict(lassoreg, X, y, cv=10)
+    predicted = cross_val_predict(lassoreg, X, y.values.ravel(), cv=10)
     print(lassoreg.coef_)
 
     from sklearn import metrics

@@ -48,10 +48,8 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'S7'
+    name = 'S12'
 
-    subjects = os.listdir('noraxon')
-    subjectFile = getFile(name, subjects)
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
 
@@ -76,9 +74,10 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('lasso.model')
+    model = joblib.load('sliced-lasso.model')
 
-    predicted = cross_val_predict(model, X, y, cv=10)
+    # predicted = cross_val_predict(model, X, y.values.ravel(), cv=10)
+    predicted = model.predict(X)
 
     from sklearn import metrics
 
