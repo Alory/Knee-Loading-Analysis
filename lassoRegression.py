@@ -8,6 +8,7 @@ from sklearn.model_selection import cross_val_predict
 from sklearn.linear_model import Lasso
 from sklearn.preprocessing import PolynomialFeatures
 import os
+from sklearn.externals import joblib
 
 def R2(y_test, y_true):
     return 1 - ((y_test - y_true)**2).sum() / ((y_true - y_true.mean())**2).sum()
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'caliAll'
+    name = 'caliAll-sliced'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -94,13 +95,14 @@ if __name__ == '__main__':
     # y_pred = model.predict(X_test)
     # predicted = cross_val_predict(model, X, y, cv=10)
 
-    alpha = 1e-8
+    alpha = 1e-7
     iter = 1e7
     tol = 0.0001
 
 
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter,tol=tol)
     lassoreg.fit(X_train, y_train)
+    joblib.dump(lassoreg, 'sliced-lasso.model')
     y_pred = lassoreg.predict(X_test)#test
     # demoy_pred = lassoreg.predict(X_demo)
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
@@ -125,7 +127,7 @@ if __name__ == '__main__':
     p1.scatter(y, predicted)
 
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    p1.set_title('All',fontsize=20)
+    p1.set_title(name,fontsize=20)
     p1.set_xlabel('Measured',fontsize=20)
     p1.set_ylabel('Predicted',fontsize=20)
     plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-alpha-' + str(alpha) + '-iter-' + str(iter) + '-seed-' + str(seed) + ".png")
