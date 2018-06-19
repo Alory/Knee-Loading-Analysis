@@ -23,6 +23,7 @@ if __name__ == '__main__':
     trialNum = '14'
     foot = "L"
     shift = 10
+    shift = 0
 
     subjects = os.listdir(testdir[:-1])#kam file name is same as noraxon file name
     # subjects = ['S7_Lee']
@@ -46,6 +47,8 @@ if __name__ == '__main__':
         subjectNum = subjectName.split("_")[0]#subject number : S12
         iotSubjectFile = getFile(subjectNum,iotFiles)#iot file name
         subjectInfo = info.loc[info['subject'] == int(subjectNum[1:])]
+        if(iotSubjectFile == -1):
+            continue
 
         iotTrialList = os.listdir(iotdatadir + iotSubjectFile)#iot data of trials
         imuTrialList = os.listdir(norxDir + subjectName)#imu data of trials

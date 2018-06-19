@@ -41,12 +41,13 @@ allcols = ['LLACx','LLACy','LLACz','LLGYx','LLGYy','LLGYz','LMACx','LMACy','LMAC
            'RLACx','RLACy','RLACz','RLGYx','RLGYy','RLGYz','RMACx','RMACy','RMACz','RMGYx','RMGYy','RMGYz',
            'mass','height','Lleglen','LkneeWid','LankleWid','Rleglen','RkneeWid','y']
 infoFile = 'subjectInfo.txt'
-out = 'kam2allinfo/'
+out = 'kam2cali/'
+iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'iot-all'
+    name = 'caliAll'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     # caliData = getCaliData(staticData)
 
     imucols = pd.DataFrame(testList)
-    data = pd.read_csv('kam2allinfo/'+name +'.txt',sep="\t")
+    data = pd.read_csv(out + name +'.txt',sep="\t")
     tempdata = data[testList]
     # tempdata = tempdata.sub(caliData.iloc[0, :])
     delayData = delayedData(tempdata,lag)
@@ -95,9 +96,10 @@ if __name__ == '__main__':
 
     alpha = 1e-8
     iter = 1e7
+    tol = 0.0001
 
 
-    lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter)
+    lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter,tol=tol)
     lassoreg.fit(X_train, y_train)
     y_pred = lassoreg.predict(X_test)#test
     # demoy_pred = lassoreg.predict(X_demo)
@@ -117,10 +119,15 @@ if __name__ == '__main__':
     # p1.plot(y_demo)
     # p1.plot(demoy_pred)
 
+    std = np.std(predicted)
+    print('std:',std)
+    # pl.errorbar(y, predicted, yerr=std, fmt="o")
     p1.scatter(y, predicted)
+
     p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    p1.set_xlabel('Measured')
-    p1.set_ylabel('Predicted')
+    p1.set_title('All',fontsize=20)
+    p1.set_xlabel('Measured',fontsize=20)
+    p1.set_ylabel('Predicted',fontsize=20)
     plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-alpha-' + str(alpha) + '-iter-' + str(iter) + '-seed-' + str(seed) + ".png")
 
     cols = X.columns
@@ -142,6 +149,7 @@ if __name__ == '__main__':
     mean = np.mean(data['y'])
     output.write('kam mean:' + str(mean) + '\n')
     output.write('alpha:' + str(alpha) + '\n')
+    output.write('tolerance:' + str(tol) + '\n')
     output.write('max iter num:' + str(iter) + '\n')
     output.write('MSE:' + str(MSE) + '\n')
     output.write('RMSE:' + str(RMSE) + '\n')
