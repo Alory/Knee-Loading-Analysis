@@ -86,15 +86,6 @@ if __name__ == '__main__':
 
     seed = 778
     X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
-    # poly_reg = PolynomialFeatures(degree=2)
-    # X_train = poly_reg.fit_transform(X_train)
-    # X_test = poly_reg.fit_transform(X_test)
-
-    # model = LinearRegression()
-    # model.fit(X_train, y_train)
-    # y_pred = model.predict(X_test)
-    # predicted = cross_val_predict(model, X, y, cv=10)
-
     alpha = 1e-7
     iter = 1e7
     tol = 0.0001
@@ -103,23 +94,19 @@ if __name__ == '__main__':
     lassoreg = Lasso(alpha=alpha, normalize=True, max_iter=iter,tol=tol)
     lassoreg.fit(X_train, y_train)
     joblib.dump(lassoreg, 'sliced-lasso.model')
-    y_pred = lassoreg.predict(X_test)#test
-    # demoy_pred = lassoreg.predict(X_demo)
+
     predicted = cross_val_predict(lassoreg, X, y, cv=10)
     print(lassoreg.coef_)
 
     from sklearn import metrics
 
-    MSE = metrics.mean_squared_error(y_test, y_pred)
-    RMSE = np.sqrt(metrics.mean_squared_error(y_test, y_pred))
+    MSE = metrics.mean_squared_error(y, predicted)
+    RMSE = np.sqrt(metrics.mean_squared_error(y, predicted))
     print("MSE:", MSE)
     print("RMSE:", RMSE)
-    # print("R2:",R2(y_pred,y_test))
 
     plt.figure(figsize=(9.06, 9.06))
     p1 = plt.subplot(111)
-    # p1.plot(y_demo)
-    # p1.plot(demoy_pred)
 
     std = np.std(predicted)
     print('std:',std)
