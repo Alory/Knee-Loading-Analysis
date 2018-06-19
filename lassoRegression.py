@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_predict
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV,Lasso
 from sklearn.preprocessing import PolynomialFeatures
 import os
 from sklearn.externals import joblib
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 1
-    name = 'caliAll-sliced'
+    name = 'caliAll'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -88,15 +88,16 @@ if __name__ == '__main__':
     # X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
     alpha = 1e-7
     iter = 1e7
-    tol = 0.00001
+    tol = 0.0001
 
 
-    lassoreg = LassoCV(cv=10,tol=tol,max_iter=iter,normalize=False).fit(X, y)
-    # lassoreg.fit(X_train, y_train)
-    alpha = lassoreg.alpha_
+    # lassoreg = LassoCV(cv=10,tol=tol,max_iter=iter).fit(X, y)#normalize=False
+    lassoreg = Lasso(alpha=alpha, normalize=False, max_iter=iter, tol=tol).fit(X, y)
+    # alpha = lassoreg.alpha_
     joblib.dump(lassoreg, 'sliced-lasso.model')
 
-    predicted = cross_val_predict(lassoreg, X, y.values.ravel(), cv=10)
+    # predicted = cross_val_predict(lassoreg, X, y.values.ravel(), cv=10)
+    predicted = lassoreg.predict(X)
     print(lassoreg.coef_)
 
     from sklearn import metrics
