@@ -18,8 +18,8 @@ if __name__ == '__main__':
     resultDir = "result/"
     testdir = "test/"
     subject = "S28_Chan"
-    trialNum = '7'
-    foot = "L"
+    trialNum = '5'
+    foot = "R"
     subjectNum = int(subject.split("_")[0][1:])
 
     rate, imudata = readImuData(norxDir + subject + '\Trial_'+trialNum+'.txt')
@@ -40,9 +40,9 @@ if __name__ == '__main__':
         usableLen = LOff - LOn
         if(subjectNum > 25):
             usableLen = int(usableLen / 2)
-            kam = kam[LOn:LOff]
+            kam = kam.loc[LOn:LOff,:]
             kam = interpolateDfData(kam, usableLen)
-            usableLen = (kam.shape)[0] - 1
+            usableLen = (kam.shape)[0]
             LOn = int(LOn/2)
             LOff = LOn + usableLen
     else:

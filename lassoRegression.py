@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     lenth = (data.shape)[0]
     useLen = (delayData.shape)[0]
-    infoData = data[['mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid']].loc[0:useLen-1]
+    infoData = data[['age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']].loc[0:useLen-1]
 
 #=======
     # demo = pd.read_csv('kam2allinfo/demo.txt', sep="\t")
@@ -88,13 +88,14 @@ if __name__ == '__main__':
     # X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.4,random_state=seed)
     alpha = 1e-7
     iter = 1e7
-    tol = 0.0001
+    tol = 0.001
 
 
-    # lassoreg = LassoCV(cv=10,tol=tol,max_iter=iter).fit(X, y)#normalize=False
-    lassoreg = Lasso(alpha=alpha, normalize=False, max_iter=iter, tol=tol).fit(X, y)
-    # alpha = lassoreg.alpha_
-    joblib.dump(lassoreg, 'sliced-lasso.model')
+    lassoreg = LassoCV(cv=10,tol=tol,max_iter=iter,normalize=True).fit(X, y)#normalize=False
+    # lassoreg = Lasso(alpha=alpha, normalize=False, max_iter=iter, tol=tol).fit(X, y)
+    score = lassoreg.score(X,y)
+    alpha = lassoreg.alpha_
+    # joblib.dump(lassoreg, 'lasso.model')
 
     # predicted = cross_val_predict(lassoreg, X, y.values.ravel(), cv=10)
     predicted = lassoreg.predict(X)
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     output = open('outcome/outcome.txt', 'a')
     output.write('\ntrial:' + name + '\n')
     output.write('lag:' + str(lag) + '\n')
-    output.write('seed:' + str(seed) + '\n')
+    output.write('score:' + str(score) + '\n')
     output.write('kam max:' + str(max(data['y'])) + '\n')
     mean = np.mean(data['y'])
     output.write('kam mean:' + str(mean) + '\n')
