@@ -48,7 +48,7 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'S23'
+    name = 'S16'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
