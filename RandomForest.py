@@ -55,10 +55,10 @@ infoFile = 'subjectInfo.txt'
 out = 'kam2cali/'
 iotout = 'kam2allinfo/'
 if __name__ == '__main__':
-    # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
-    testList = tempIotcols[0:24]
+    testList = list(filter(lambda x: 'AC' in x, tempIotcols))
+    # testList = tempIotcols[0:24]
     lag = 0
-    name = 'caliAll'
+    name = 'S41'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -66,9 +66,9 @@ if __name__ == '__main__':
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name +'.txt',sep="\t")
 
-    thrshold = 0.01
-    data = data[data.y >= thrshold]
-    data = data.reset_index().iloc[:, 1:]
+    # thrshold = 0.01
+    # data = data[data.y >= thrshold]
+    # data = data.reset_index().iloc[:, 1:]
 
     tempdata = data[testList]
     delayData = delayedData(tempdata,lag)
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     model = ensemble.RandomForestRegressor(n_estimators=50,oob_score=True,bootstrap=True)#,max_features=20
     model.fit(X_train, y_train)
 
-    joblib.dump(model, method + '-chopped-' + name + '.model')
+    joblib.dump(model, 'model/' + method + '-chopped-' + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)
@@ -123,8 +123,9 @@ if __name__ == '__main__':
     output = open('outcome/outcome.txt', 'a')
     output.write('\ntrial:' + name + '\n')
     output.write('data size:' + str(data.shape) + '\n')
-    output.write('train R2 score:' + str(trainScore) + '\n')
-    output.write('test R2 score:' + str(testScore) + '\n')
+    output.write('method:' + method + '\n')
+    output.write('training dataset R2 score:' + str(trainScore) + '\n')
+    output.write('test dataset R2 score:' + str(testScore) + '\n')
     output.write('OOB score:' + str(model.oob_score_) + '\n')
     output.write('kam max:' + str(max(data['y'])) + '\n')
     mean = np.mean(y_test['y'])

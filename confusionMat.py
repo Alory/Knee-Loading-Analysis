@@ -77,8 +77,10 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('RandomForest-chopped-caliAll.model')
-    # predicted = cross_val_predict(model, X, y.values.ravel(), cv=10)
+    model = joblib.load('model/' + 'RandomForest-chopped-caliAll.model')
+    print(X.columns)
+    print(model.oob_prediction_)
+    print(model.feature_importances_)
     predicted = model.predict(X)
 
     from sklearn import metrics
