@@ -48,7 +48,7 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'S8'
+    name = 'S23'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
     p1.plot(np.arange(len(predicted)), y, 'go-', label='true value')
     p1.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
-    p1.set_title(name + ' prediction')
+    p1.set_title(name + ' prediction\n' + 'R2:' + str(score))
     p1.set_xlabel('index')
     p1.set_ylabel('KAM in Y axis')
     p1.legend()
