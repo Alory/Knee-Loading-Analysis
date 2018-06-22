@@ -107,8 +107,8 @@ def readImuData(filename):
     data = pd.read_table(filename, skiprows=4, sep="\t", usecols=valueCols)  # skip first 4 rows
     imuRate = int(info.iat[1, 0])  # get imu rate
     data.columns = imuCols
-    # for pos in iotCols:
-    #     data[pos] = signal.savgol_filter(data[pos], 7, 3)
+    for pos in iotCols:
+        data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return imuRate, data
 
 '''

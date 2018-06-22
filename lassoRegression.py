@@ -66,19 +66,6 @@ if __name__ == '__main__':
     useLen = (delayData.shape)[0]
     infoData = data[['age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']].loc[0:useLen-1]
 
-#=======
-    # demo = pd.read_csv('kam2allinfo/demo.txt', sep="\t")
-    # tempdata = demo[testList]
-    # demodelayData = delayedData(tempdata, lag)
-    #
-    # demolenth = (demo.shape)[0]
-    # demouseLen = (demodelayData.shape)[0]
-    # demoinfoData = demo[['mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid']].loc[
-    #            0:demouseLen - 1]
-    # X_demo = pd.concat([demodelayData,demoinfoData],axis=1)
-    # y_demo = demo[['y']].loc[lag:demolenth]
-# =======
-
     X = pd.concat([delayData,infoData],axis=1)
     y = data[['y']].loc[lag:lenth]
     print(X.shape)
@@ -102,7 +89,6 @@ if __name__ == '__main__':
     print(lassoreg.coef_)
 
     from sklearn import metrics
-
     MSE = metrics.mean_squared_error(y, predicted)
     RMSE = np.sqrt(metrics.mean_squared_error(y, predicted))
     print("MSE:", MSE)

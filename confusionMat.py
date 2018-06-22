@@ -47,35 +47,37 @@ out = 'kam2cali/'
 iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
-    lag = 1
-    name = 'S12'
+    lag = 0
+    name = 'caliAll'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
 
     kamReal = data.y
-    thrshold = 0.7 * np.max(kamReal)
-    highdata = data[data.y >= thrshold]
-    lowdata = data[data.y < thrshold]
+    filterIndex = 0.7
+    thrshold = filterIndex * np.max(kamReal)
 
+    highdata = data[data.y >= thrshold]
     highdata = highdata.reset_index().iloc[:, 1:]
 
-    tempdata = highdata[testList]
+    lowdata = data[data.y < thrshold]
+    lowdata = lowdata.reset_index().iloc[:, 1:]
+
+    traindata = highdata
+    tempdata = traindata[testList]
     delayData = delayedData(tempdata, lag)
 
-    lenth = (highdata.shape)[0]
+    lenth = (traindata.shape)[0]
     useLen = (delayData.shape)[0]
-    infoData = highdata[['mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid']].loc[
-               0:useLen - 1]
+    infoData = traindata[['age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']].loc[0:useLen-1]
 
 
     X = pd.concat([delayData, infoData], axis=1)
-    y = highdata[['y']].loc[lag:lenth]
+    y = traindata[['y']].loc[lag:lenth]
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('sliced-lasso.model')
-
+    model = joblib.load('RandomForest-chopped-caliAll.model')
     # predicted = cross_val_predict(model, X, y.values.ravel(), cv=10)
     predicted = model.predict(X)
 
@@ -83,34 +85,39 @@ if __name__ == '__main__':
 
     MSE = metrics.mean_squared_error(y, predicted)
     RMSE = np.sqrt(metrics.mean_squared_error(y, predicted))
+    score = model.score(X, y)
+
     print("MSE:", MSE)
     print("RMSE:", RMSE)
+    print("score:",score)
+    print('kam max:' + str(max(data['y'])))
+    mean = (np.mean(y))[0]
+    print('kam mean:' + str(mean))
+    print('RMSE / mean:' + str(RMSE / mean))
 
-    plt.figure(figsize=(9.06, 9.06))
-    p1 = plt.subplot(111)
-    # p1.plot(y_demo)
-    # p1.plot(demoy_pred)
-
-    std = np.std(predicted)
-    print('std:', std)
-    # pl.errorbar(y, predicted, yerr=std, fmt="o")
-    p1.scatter(y, predicted)
-
-    p1.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    p1.set_title(name, fontsize=20)
-    p1.set_xlabel('Measured', fontsize=20)
-    p1.set_ylabel('Predicted', fontsize=20)
-    plt.savefig('outcome/' + name + ".png")
-
-
-    output = open('outcome/outcome.txt', 'a')
-    output.write('\ntrial:' + name + '\n')
-    output.write('kam max:' + str(max(highdata['y'])) + '\n')
-    mean = np.mean(highdata['y'])
-    output.write('kam mean:' + str(mean) + '\n')
-    output.write('MSE:' + str(MSE) + '\n')
-    output.write('RMSE:' + str(RMSE) + '\n')
-    output.write('RMSE / mean:' + str(RMSE / mean) + '\n')
-    output.close()
+    pl.figure()
+    pl.plot(np.arange(len(predicted)), y, 'go-', label='true value')
+    pl.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
+    pl.title('score: %f' % score)
+    pl.legend()
+    pl.show()
 
     plt.show()
+
+    # thrshold = (0.8 * np.max(y))[0]
+    # y[y >= thrshold] = 1
+    # y[y < thrshold] = 0
+    #
+    predicted = pd.DataFrame(predicted)
+    predictedHigh = predicted[predicted >= thrshold]
+    predictedHigh = predictedHigh.dropna(axis=0, how='all')
+    predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
+    print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
+    print('number of real data over 0.8 max kam:',(highdata.shape)[0])
+    print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
+    #
+    # from sklearn.metrics import confusion_matrix
+    # tn, fp, fn, tp = confusion_matrix(y, predicted).ravel()
+    # size = (y.shape)[0]
+    # confMat = np.array([tp, tn, fp, fn, ]) #/ size
+    # print(confMat)

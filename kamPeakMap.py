@@ -112,4 +112,4 @@ if __name__ == '__main__':
             allData = pd.concat([allData,data])
 
         # subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)
-    allData.to_csv("kam2cali/" + "caliAll.txt", sep="\t", float_format='%.6f',index=None)
+    allData.to_csv("kam2cali/" + "filtered-caliAll.txt", sep="\t", float_format='%.6f',index=None)
