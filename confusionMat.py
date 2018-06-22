@@ -48,22 +48,13 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'S11'
+    name = 'S7'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
 
-    kamReal = data.y
-    filterIndex = 0.8
-    thrshold = filterIndex * np.max(kamReal)
-
-    highdata = data[data.y >= thrshold]
-    outlinesIndex = highdata.index
     # highdata = highdata.reset_index().iloc[:, 1:]
     # highdata = highdata.fillna(0)
-
-    lowdata = data[data.y < thrshold]
-    lowdata = lowdata.reset_index().iloc[:, 1:]
 
     traindata = data
     tempdata = traindata[testList]
@@ -79,7 +70,7 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('model/' + 'RandomForest-chopped-caliAll.model')
+    model = joblib.load('model/' + 'RandomForest-caliAll.model')
 
 
     predicted = model.predict(X)
@@ -98,7 +89,7 @@ if __name__ == '__main__':
     print('kam mean:' + str(mean))
     print('RMSE / mean:' + str(RMSE / mean))
 
-    pl.figure()
+    pl.figure(figsize=(10,7))
     p1 = pl.subplot(211)
     p2 = pl.subplot(212)
 
@@ -107,24 +98,52 @@ if __name__ == '__main__':
     p1.set_title('prediction')
     p1.legend()
 
+    filterIndex = 0.8
+    thrshold = filterIndex * np.max(y.values)
+
+    highdata = data[data.y >= thrshold]
+    lowdata = data[data.y < thrshold]
+    outlinesIndex = highdata.index
+    lowdataIndex = lowdata.index
+
     predicted = pd.DataFrame(predicted)
     predictedHigh = predicted.loc[outlinesIndex]
     realHigh = y.loc[outlinesIndex]
-    # predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
-    # highdata = highdata.reset_index().iloc[:, 1:]
+
+    allNum = (y.shape)[0]
+    predictedHighNum = (predictedHigh.shape)[0]#predicted value over 0.8max
+    predictedLowNum = allNum - predictedHighNum
+    realHighNum = (realHigh.shape)[0]
+    realLowNum = allNum - realHighNum
+
     p2.scatter(outlinesIndex,realHigh.iloc[:,0], label='true value')
     p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0], label='predict value')
 
+    # predictedHigh = predictedHigh[predictedHigh >= thrshold]
+    # predictedHigh = predictedHigh.dropna(axis=0, how='all')
+    # predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
+    # print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
+    # print('number of real data over 0.8 max kam:',(highdata.shape)[0])
+    # print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
+    # print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
+
+    y[y < thrshold] = 0
+    y[y >= thrshold] = 1
+    predicted[predicted < thrshold] = 0
+    predicted[predicted >= thrshold] = 1
+
+    from sklearn.metrics import confusion_matrix
+    mat = confusion_matrix(y, predicted)
+    # tn, fp, fn, tp = mat.ravel()
+    mat = np.array(mat,dtype=float)
+    mat[0,0] = mat[0,0] / realLowNum
+    mat[1,1] = mat[1,1] / realHighNum
+    mat[0,1] = mat[0,1] / realLowNum
+    mat[1,0] = mat[1,0] / realHighNum
+
+    fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8)
+
     pl.show()
-
-    predictedHigh = predictedHigh[predictedHigh >= thrshold]
-    predictedHigh = predictedHigh.dropna(axis=0, how='all')
-    predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
-
-    print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
-    print('number of real data over 0.8 max kam:',(highdata.shape)[0])
-    print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
-    print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
 
     output = open('outcome/subjectAnalyze.txt', 'a')
     output.write('\nsubject:' + name + '\n')
@@ -134,8 +153,8 @@ if __name__ == '__main__':
     output.write('kam max:' + str(max(data['y']))+ '\n')
     output.write('kam mean:' + str(mean)+ '\n')
     output.write('RMSE / mean:' + str(RMSE / mean)+ '\n')
-    output.write(str(100 * filterIndex) + '% * max(reald KAM):'+ str(thrshold)+ '\n')
-    output.write('number of real data over 0.8 max kam:' + str((highdata.shape)[0])+ '\n')
-    output.write('number of predicted data over 0.8 max kam:'+ str((predictedHigh.shape)[0])+ '\n')
-    output.write('ratio:'+str((predictedHigh.shape)[0] / (highdata.shape)[0])+ '\n')
+    # output.write(str(100 * filterIndex) + '% * max(reald KAM):'+ str(thrshold)+ '\n')
+    # output.write('number of real data over 0.8 max kam:' + str((highdata.shape)[0])+ '\n')
+    # output.write('number of predicted data over 0.8 max kam:'+ str((predictedHigh.shape)[0])+ '\n')
+    # output.write('ratio:'+str((predictedHigh.shape)[0] / (highdata.shape)[0])+ '\n')
     output.close()

@@ -15,6 +15,7 @@ import sys
 from math import acos, atan2, cos, pi, sin
 import math
 from numpy import NaN, Inf, arange, isscalar, asarray, array
+import seaborn as sns
 
 # imu raw data columns
 imuCols = ['time', 'syncOn', 'LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
@@ -731,3 +732,39 @@ def gyroCali(zeroOffset,data):
 
     return data
 
+
+def print_confusion_matrix(confusion_matrix, class_names, title='Confusion matrix',figsize=(10, 7), fontsize=14):
+    """Prints a confusion matrix, as returned by sklearn.metrics.confusion_matrix, as a heatmap.
+
+    Arguments
+    ---------
+    confusion_matrix: numpy.ndarray
+        The numpy.ndarray object returned from a call to sklearn.metrics.confusion_matrix.
+        Similarly constructed ndarrays can also be used.
+    class_names: list
+        An ordered list of class names, in the order they index the given confusion matrix.
+    figsize: tuple
+        A 2-long tuple, the first value determining the horizontal size of the ouputted figure,
+        the second determining the vertical size. Defaults to (10,7).
+    fontsize: int
+        Font size for axes labels. Defaults to 14.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The resulting confusion matrix figure
+    """
+    df_cm = pd.DataFrame(
+        confusion_matrix, index=class_names, columns=class_names,
+    )
+    fig = pl.figure(figsize=figsize)
+    try:
+        heatmap = sns.heatmap(df_cm, cbar=False,fmt=".2f",annot=True)# annot=True, fmt="d",
+    except ValueError:
+        raise ValueError("Confusion matrix values must be integers.")
+    heatmap.yaxis.set_ticklabels(heatmap.yaxis.get_ticklabels(), rotation=0, ha='right', fontsize=fontsize)
+    heatmap.xaxis.set_ticklabels(heatmap.xaxis.get_ticklabels(), rotation=0, ha='right', fontsize=fontsize)
+    pl.title(title)
+    pl.ylabel('True data')
+    pl.xlabel('Predicted data')
+    return fig
