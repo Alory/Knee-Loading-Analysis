@@ -48,22 +48,24 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'caliAll'
+    name = 'S11'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
 
     kamReal = data.y
-    filterIndex = 0.7
+    filterIndex = 0.8
     thrshold = filterIndex * np.max(kamReal)
 
     highdata = data[data.y >= thrshold]
-    highdata = highdata.reset_index().iloc[:, 1:]
+    outlinesIndex = highdata.index
+    # highdata = highdata.reset_index().iloc[:, 1:]
+    # highdata = highdata.fillna(0)
 
     lowdata = data[data.y < thrshold]
     lowdata = lowdata.reset_index().iloc[:, 1:]
 
-    traindata = highdata
+    traindata = data
     tempdata = traindata[testList]
     delayData = delayedData(tempdata, lag)
 
@@ -77,10 +79,7 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('model/' + 'RandomForest-chopped-caliAll.model')
-    print(X.columns)
-    print(model.oob_prediction_)
-    print(model.feature_importances_)
+    model = joblib.load('model/' + 'RandomForest-caliAll.model')
     predicted = model.predict(X)
 
     from sklearn import metrics
@@ -98,25 +97,32 @@ if __name__ == '__main__':
     print('RMSE / mean:' + str(RMSE / mean))
 
     pl.figure()
-    pl.plot(np.arange(len(predicted)), y, 'go-', label='true value')
-    pl.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
-    pl.title('score: %f' % score)
-    pl.legend()
+    p1 = pl.subplot(211)
+    p2 = pl.subplot(212)
+
+    p1.plot(np.arange(len(predicted)), y, 'go-', label='true value')
+    p1.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
+    p1.set_title('prediction')
+    p1.legend()
+
+    predicted = pd.DataFrame(predicted)
+    predictedHigh = predicted.loc[outlinesIndex]
+    realHigh = y.loc[outlinesIndex]
+    # predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
+    # highdata = highdata.reset_index().iloc[:, 1:]
+    p2.scatter(outlinesIndex,realHigh.iloc[:,0], label='true value')
+    p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0], label='predict value')
+
     pl.show()
 
-    plt.show()
-
-    # thrshold = (0.8 * np.max(y))[0]
-    # y[y >= thrshold] = 1
-    # y[y < thrshold] = 0
-    #
-    predicted = pd.DataFrame(predicted)
-    predictedHigh = predicted[predicted >= thrshold]
+    predictedHigh = predictedHigh[predictedHigh >= thrshold]
     predictedHigh = predictedHigh.dropna(axis=0, how='all')
     predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
+
     print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
     print('number of real data over 0.8 max kam:',(highdata.shape)[0])
     print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
+    print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
     #
     # from sklearn.metrics import confusion_matrix
     # tn, fp, fn, tp = confusion_matrix(y, predicted).ravel()
