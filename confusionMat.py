@@ -48,7 +48,7 @@ iotout = 'kam2allinfo/'
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'S7'
+    name = 'S8'
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(out + name + '.txt', sep="\t")
@@ -95,7 +95,9 @@ if __name__ == '__main__':
 
     p1.plot(np.arange(len(predicted)), y, 'go-', label='true value')
     p1.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
-    p1.set_title('prediction')
+    p1.set_title(name + ' prediction')
+    p1.set_xlabel('index')
+    p1.set_ylabel('KAM in Y axis')
     p1.legend()
 
     filterIndex = 0.8
@@ -116,8 +118,9 @@ if __name__ == '__main__':
     realHighNum = (realHigh.shape)[0]
     realLowNum = allNum - realHighNum
 
-    p2.scatter(outlinesIndex,realHigh.iloc[:,0], label='true value')
-    p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0], label='predict value')
+    p2.set_title('data over 80% of max KAM')
+    p2.scatter(outlinesIndex,realHigh.iloc[:,0],c='g',marker='o')
+    p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0],c='r',marker='o')
 
     # predictedHigh = predictedHigh[predictedHigh >= thrshold]
     # predictedHigh = predictedHigh.dropna(axis=0, how='all')
@@ -141,8 +144,10 @@ if __name__ == '__main__':
     mat[0,1] = mat[0,1] / realLowNum
     mat[1,0] = mat[1,0] / realHighNum
 
-    fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8)
+    pl.savefig('outcome/' + name + '-prediction.png')
+    fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8,title=name)
 
+    pl.savefig('outcome/' + name + 'confusionMat.png')
     pl.show()
 
     output = open('outcome/subjectAnalyze.txt', 'a')
@@ -153,8 +158,8 @@ if __name__ == '__main__':
     output.write('kam max:' + str(max(data['y']))+ '\n')
     output.write('kam mean:' + str(mean)+ '\n')
     output.write('RMSE / mean:' + str(RMSE / mean)+ '\n')
-    # output.write(str(100 * filterIndex) + '% * max(reald KAM):'+ str(thrshold)+ '\n')
-    # output.write('number of real data over 0.8 max kam:' + str((highdata.shape)[0])+ '\n')
-    # output.write('number of predicted data over 0.8 max kam:'+ str((predictedHigh.shape)[0])+ '\n')
-    # output.write('ratio:'+str((predictedHigh.shape)[0] / (highdata.shape)[0])+ '\n')
+    output.write('TN:' + str(mat[0, 0])+ '\n')
+    output.write('TP:' + str(mat[1, 1]) + '\n')
+    output.write('FP:' + str(mat[0, 1]) + '\n')
+    output.write('FN:' + str(mat[1, 0]) + '\n')
     output.close()
