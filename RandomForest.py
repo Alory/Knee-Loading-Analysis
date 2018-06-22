@@ -92,6 +92,7 @@ if __name__ == '__main__':
     model = ensemble.RandomForestRegressor(n_estimators=50,oob_score=True,bootstrap=True)#,max_features=20
     model.fit(X_train, y_train)
 
+
     joblib.dump(model, 'model/' + method + '-' + name + '.model')
 
     trainScore = model.score(X_train, y_train)

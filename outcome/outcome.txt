@@ -4270,3 +4270,53 @@ kam mean:0.016464047896634512
 MSE:3.906367946691779e-05
 RMSE:0.006250094356641169
 RMSE / mean:0.3796207588729609
+
+(3232, 35)
+(3232, 1)
+MSE: 8.608997842241335e-06
+RMSE: 0.0029341093780296153
+score: 0.8866967035744856
+kam max:0.023135
+kam mean:0.011304801670792107
+RMSE / mean:0.2595454094175212
+80.0% * max(reald KAM): 0.018508
+number of real data over 0.8 max kam: 882
+number of predicted data over 0.8 max kam: 827
+ratio: 0.937641723356009
+
+(1379, 35)
+(1379, 1)
+MSE: 2.260674487068854e-05
+RMSE: 0.004754655073787008
+score: 0.8434742357835476
+kam max:0.046812
+kam mean:0.022257086294416223
+RMSE / mean:0.21362432669274586
+80.0% * max(reald KAM): 0.0374496
+number of real data over 0.8 max kam: 71
+number of predicted data over 0.8 max kam: 28
+ratio: 0.39436619718309857
+
+(41600, 35)
+(41600, 1)
+MSE: 2.1565833943412367e-05
+RMSE: 0.00464390287833546
+score: 0.8275357542725269
+kam max:0.046812
+kam mean:0.016530827091346238
+RMSE / mean:0.2809238069380393
+80.0% * max(reald KAM): 0.0374496
+number of real data over 0.8 max kam: 619
+number of predicted data over 0.8 max kam: 245
+ratio: 0.39579967689822293
+trial:caliAll
+data size:(41600, 37)
+method:RandomForest
+training dataset R2 score:0.922325313674181
+test dataset R2 score:0.6844200964932738
+OOB score:0.6773841379965668
+kam max:0.046812
+kam mean:0.016446279987980622
+MSE:3.9777003374371544e-05
+RMSE:0.0063069012497716775
+RMSE / mean:0.3834849737679845

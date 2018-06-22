@@ -79,7 +79,9 @@ if __name__ == '__main__':
     print(X.shape)
     print(y.shape)
 
-    model = joblib.load('model/' + 'RandomForest-caliAll.model')
+    model = joblib.load('model/' + 'RandomForest-chopped-caliAll.model')
+
+
     predicted = model.predict(X)
 
     from sklearn import metrics
@@ -90,7 +92,7 @@ if __name__ == '__main__':
 
     print("MSE:", MSE)
     print("RMSE:", RMSE)
-    print("score:",score)
+    print("R2 score:",score)
     print('kam max:' + str(max(data['y'])))
     mean = (np.mean(y))[0]
     print('kam mean:' + str(mean))
@@ -123,9 +125,17 @@ if __name__ == '__main__':
     print('number of real data over 0.8 max kam:',(highdata.shape)[0])
     print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
     print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
-    #
-    # from sklearn.metrics import confusion_matrix
-    # tn, fp, fn, tp = confusion_matrix(y, predicted).ravel()
-    # size = (y.shape)[0]
-    # confMat = np.array([tp, tn, fp, fn, ]) #/ size
-    # print(confMat)
+
+    output = open('outcome/subjectAnalyze.txt', 'a')
+    output.write('\nsubject:' + name + '\n')
+    output.write("MSE:"+ str(MSE)+ '\n')
+    output.write("RMSE:"+ str(RMSE)+ '\n')
+    output.write("R2 score:"+ str(score)+ '\n')
+    output.write('kam max:' + str(max(data['y']))+ '\n')
+    output.write('kam mean:' + str(mean)+ '\n')
+    output.write('RMSE / mean:' + str(RMSE / mean)+ '\n')
+    output.write(str(100 * filterIndex) + '% * max(reald KAM):'+ str(thrshold)+ '\n')
+    output.write('number of real data over 0.8 max kam:' + str((highdata.shape)[0])+ '\n')
+    output.write('number of predicted data over 0.8 max kam:'+ str((predictedHigh.shape)[0])+ '\n')
+    output.write('ratio:'+str((predictedHigh.shape)[0] / (highdata.shape)[0])+ '\n')
+    output.close()
