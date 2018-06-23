@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'AC' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'iot-allData-R'
+    name = 'iot-allData-L'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     model.fit(X_train, y_train)
 
 
-    # joblib.dump(model, 'model/' + method + '-' + name + '.model')
+    joblib.dump(model, 'model/' + method + '-' + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)
