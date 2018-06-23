@@ -73,7 +73,7 @@ if __name__ == '__main__':
                 LOn = 2 * LOn
                 LOff = LOn + usableLen
 
-            # shift = 10
+            shift = 0
             # # shift = int(usableLen / 6)
             # usableLen = usableLen + 2 * shift
             # LOn = LOn - shift
