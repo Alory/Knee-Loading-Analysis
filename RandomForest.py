@@ -76,6 +76,7 @@ if __name__ == '__main__':
     useLen = (delayData.shape)[0]
     infoData = data[['age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid',
                      'gender_F', 'gender_M']].loc[0:useLen - 1]
+    # infoData = data[['age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid',]].loc[0:useLen - 1]
 
     X = pd.concat([delayData, infoData], axis=1)
     y = data[['y']].loc[lag:lenth]
