@@ -45,135 +45,145 @@ allcols = ['LLACx','LLACy','LLACz','LLGYx','LLGYy','LLGYz','LMACx','LMACy','LMAC
 infoFile = 'subjectInfo.txt'
 out = 'kam2cali/'
 iotout = 'kam2allinfo/'
+
+modelL = joblib.load('model/' + 'RandomForest-allData-L.model')
+modelR = joblib.load('model/' + 'RandomForest-allData-R.model')
+
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    names = ['S7','S8','S10','S11','S12','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
+    # names = ['S7','S8','S10','S11','S12','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
+    names = ['S28']
+    feet = ['L','R']
 
     for name in names:
-        imucols = pd.DataFrame(testList)
-        data = pd.read_csv(out + name + '.txt', sep="\t")
+        for foot in feet:
+            subname = name + '-' + foot
+            imucols = pd.DataFrame(testList)
+            data = pd.read_csv(out + subname + '.txt', sep="\t")
 
-        # highdata = highdata.reset_index().iloc[:, 1:]
-        # highdata = highdata.fillna(0)
+            # highdata = highdata.reset_index().iloc[:, 1:]
+            # highdata = highdata.fillna(0)
 
-        traindata = data
-        tempdata = traindata[testList]
-        delayData = delayedData(tempdata, lag)
+            traindata = data
+            tempdata = traindata[testList]
+            delayData = delayedData(tempdata, lag)
 
-        lenth = (traindata.shape)[0]
-        useLen = (delayData.shape)[0]
-        infoData = traindata[['age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']].loc[0:useLen-1]
-
-
-        X = pd.concat([delayData, infoData], axis=1)
-        y = traindata[['y']].loc[lag:lenth]
-        print(X.shape)
-        print(y.shape)
-
-        model = joblib.load('model/' + 'RandomForest-caliAll.model')
+            lenth = (traindata.shape)[0]
+            useLen = (delayData.shape)[0]
+            infoData = traindata[['age','mass','height','Lleglen','LkneeWid','Rleglen','LankleWid','RkneeWid','RankleWid','gender_F','gender_M']].loc[0:useLen-1]
 
 
-        predicted = model.predict(X)
+            X = pd.concat([delayData, infoData], axis=1)
+            y = traindata[['y']].loc[lag:lenth]
+            print(X.shape)
+            print(y.shape)
 
-        from sklearn import metrics
+            if(foot == 'L'):
+                model = modelL
+            if(foot == 'R'):
+                model = modelR
 
-        MSE = metrics.mean_squared_error(y, predicted)
-        RMSE = np.sqrt(metrics.mean_squared_error(y, predicted))
-        score = model.score(X, y)
+            predicted = model.predict(X)
 
-        print("MSE:", MSE)
-        print("RMSE:", RMSE)
-        print("R2 score:",score)
-        print('kam max:' + str(max(data['y'])))
-        mean = (np.mean(y))[0]
-        print('kam mean:' + str(mean))
-        print('RMSE / mean:' + str(RMSE / mean))
+            from sklearn import metrics
 
-        pl.figure(figsize=(10,7))
-        p1 = pl.subplot(211)
-        p2 = pl.subplot(212)
-        # p3 = pl.subplot(313)
+            MSE = metrics.mean_squared_error(y, predicted)
+            RMSE = np.sqrt(metrics.mean_squared_error(y, predicted))
+            score = model.score(X, y)
 
-        # p3.scatter(peakIndex, peakValues, color='blue', marker='*')
-        p1.plot(np.arange(len(predicted)), y, 'go-', label='true value')
-        p1.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
+            print("MSE:", MSE)
+            print("RMSE:", RMSE)
+            print("R2 score:",score)
+            print('kam max:' + str(max(data['y'])))
+            mean = (np.mean(y))[0]
+            print('kam mean:' + str(mean))
+            print('RMSE / mean:' + str(RMSE / mean))
 
-        p1.set_title(name + ' prediction\n' + 'R2:' + str(score))
-        p1.set_xlabel('index')
-        p1.set_ylabel('KAM in Y axis')
-        p1.legend()
+            pl.figure(figsize=(10,7))
+            p1 = pl.subplot(211)
+            p2 = pl.subplot(212)
+            # p3 = pl.subplot(313)
 
-        filterIndex = 0.8
-        maxtab, mintab = peakdet(y, 0.01)
-        peakIndex = maxtab[:, 0]
-        peakValues = maxtab[:, 1]
-        thrshold = filterIndex * np.mean(peakValues)
+            # p3.scatter(peakIndex, peakValues, color='blue', marker='*')
+            p1.plot(np.arange(len(predicted)), y, 'go-', label='true value')
+            p1.plot(np.arange(len(predicted)), predicted, 'ro-', label='predict value')
 
-        highdata = data[data.y >= thrshold]
-        lowdata = data[data.y < thrshold]
-        outlinesIndex = highdata.index
-        lowdataIndex = lowdata.index
+            p1.set_title(subname + ' prediction\n' + 'R2:' + str(score))
+            p1.set_xlabel('index')
+            p1.set_ylabel('KAM in Y axis')
+            p1.legend()
 
-        predicted = pd.DataFrame(predicted)
-        predictedHigh = predicted.loc[outlinesIndex]
-        realHigh = y.loc[outlinesIndex]
+            filterIndex = 0.8
+            maxtab, mintab = peakdet(y, 0.01)
+            peakIndex = maxtab[:, 0]
+            peakValues = maxtab[:, 1]
+            thrshold = filterIndex * np.mean(peakValues)
 
-        allNum = (y.shape)[0]
-        predictedHighNum = (predictedHigh.shape)[0]#predicted value over 0.8max
-        predictedLowNum = allNum - predictedHighNum
-        realHighNum = (realHigh.shape)[0]
-        realLowNum = allNum - realHighNum
+            highdata = data[data.y >= thrshold]
+            lowdata = data[data.y < thrshold]
+            outlinesIndex = highdata.index
+            lowdataIndex = lowdata.index
 
-        p2.set_title('data over 80% of max KAM')
-        p2.scatter(outlinesIndex,realHigh.iloc[:,0],c='g',marker='o')
-        p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0],c='r',marker='o')
+            predicted = pd.DataFrame(predicted)
+            predictedHigh = predicted.loc[outlinesIndex]
+            realHigh = y.loc[outlinesIndex]
 
-        # predictedHigh = predictedHigh[predictedHigh >= thrshold]
-        # predictedHigh = predictedHigh.dropna(axis=0, how='all')
-        # predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
-        # print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
-        # print('number of real data over 0.8 max kam:',(highdata.shape)[0])
-        # print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
-        # print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
+            allNum = (y.shape)[0]
+            predictedHighNum = (predictedHigh.shape)[0]#predicted value over 0.8max
+            predictedLowNum = allNum - predictedHighNum
+            realHighNum = (realHigh.shape)[0]
+            realLowNum = allNum - realHighNum
 
-        y[y < thrshold] = 0
-        y[y >= thrshold] = 1
-        predicted[predicted < thrshold] = 0
-        predicted[predicted >= thrshold] = 1
+            p2.set_title('data over 80% of max KAM')
+            p2.scatter(outlinesIndex,realHigh.iloc[:,0],c='g',marker='o')
+            p2.scatter(outlinesIndex, predictedHigh.iloc[:, 0],c='r',marker='o')
 
-        from sklearn.metrics import confusion_matrix
-        mat = confusion_matrix(y, predicted)
-        # tn, fp, fn, tp = mat.ravel()
-        mat = np.array(mat,dtype=float)
-        mat[0,0] = mat[0,0] / realLowNum
-        mat[1,1] = mat[1,1] / realHighNum
-        mat[0,1] = mat[0,1] / realLowNum
-        mat[1,0] = mat[1,0] / realHighNum
+            # predictedHigh = predictedHigh[predictedHigh >= thrshold]
+            # predictedHigh = predictedHigh.dropna(axis=0, how='all')
+            # predictedHigh = predictedHigh.reset_index().iloc[:, 1:]
+            # print(str(100*filterIndex) + '% * max(reald KAM):',thrshold)
+            # print('number of real data over 0.8 max kam:',(highdata.shape)[0])
+            # print('number of predicted data over 0.8 max kam:', (predictedHigh.shape)[0])
+            # print('ratio:', (predictedHigh.shape)[0]/(highdata.shape)[0])
 
-        pl.savefig('outcome/' + name + '-prediction.png')
-        fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8,title=name)
+            y[y < thrshold] = 0
+            y[y >= thrshold] = 1
+            predicted[predicted < thrshold] = 0
+            predicted[predicted >= thrshold] = 1
 
-        pl.savefig('outcome/' + name + 'confusionMat.png')
-        # pl.show()
+            from sklearn.metrics import confusion_matrix
+            mat = confusion_matrix(y, predicted)
+            # tn, fp, fn, tp = mat.ravel()
+            mat = np.array(mat,dtype=float)
+            mat[0,0] = mat[0,0] / realLowNum
+            mat[1,1] = mat[1,1] / realHighNum
+            mat[0,1] = mat[0,1] / realLowNum
+            mat[1,0] = mat[1,0] / realHighNum
 
-        result = [score,RMSE,mean, RMSE / mean, mat[1,1], mat[0, 0], mat[0, 1], mat[1, 0]]
-        for i in range(len(result)):
-            result[i] = '%.4f' % result[i]
-        result = '\t'.join(result)
-        # output = open('outcome/subjectAnalyze.txt', 'a')
-        # output.write('\nsubject:' + name + '\n')
-        # output.write("MSE:"+ str(MSE)+ '\n')
-        # output.write("RMSE:"+ str(RMSE)+ '\n')
-        # output.write("R2 score:"+ str(score)+ '\n')
-        # output.write('kam max:' + str(max(data['y']))+ '\n')
-        # output.write('kam mean:' + str(mean)+ '\n')
-        # output.write('RMSE / mean:' + str(RMSE / mean)+ '\n')
-        # output.write('TN:' + str(mat[0, 0])+ '\n')
-        # output.write('TP:' + str(mat[1, 1]) + '\n')
-        # output.write('FP:' + str(mat[0, 1]) + '\n')
-        # output.write('FN:' + str(mat[1, 0]) + '\n')
+            pl.savefig('outcome/' + subname + '-prediction.png')
+            fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8,title=subname)
 
-        output = open('outcome/testresult.txt', 'a')
-        output.write(name + '\t' + result + '\n')
-        output.close()
+            pl.savefig('outcome/' + subname + 'confusionMat.png')
+            pl.show()
+
+            result = [score,RMSE,mean, RMSE / mean, mat[1,1], mat[0, 0], mat[0, 1], mat[1, 0]]
+            for i in range(len(result)):
+                result[i] = '%.4f' % result[i]
+            result = '\t'.join(result)
+            # output = open('outcome/subjectAnalyze.txt', 'a')
+            # output.write('\nsubject:' + subname + '\n')
+            # output.write("MSE:"+ str(MSE)+ '\n')
+            # output.write("RMSE:"+ str(RMSE)+ '\n')
+            # output.write("R2 score:"+ str(score)+ '\n')
+            # output.write('kam max:' + str(max(data['y']))+ '\n')
+            # output.write('kam mean:' + str(mean)+ '\n')
+            # output.write('RMSE / mean:' + str(RMSE / mean)+ '\n')
+            # output.write('TN:' + str(mat[0, 0])+ '\n')
+            # output.write('TP:' + str(mat[1, 1]) + '\n')
+            # output.write('FP:' + str(mat[0, 1]) + '\n')
+            # output.write('FN:' + str(mat[1, 0]) + '\n')
+
+            output = open('outcome/testresult.txt', 'a')
+            output.write(subname + '\t' + result + '\n')
+            output.close()

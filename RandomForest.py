@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'AC' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'caliAll'
+    name = 'allData-L'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)

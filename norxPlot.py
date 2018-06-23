@@ -18,8 +18,8 @@ if __name__ == '__main__':
     resultDir = "result/"
     testdir = "test/"
     subject = "S28_Chan"
-    trialNum = '5'
-    foot = "R"
+    trialNum = '13'
+    foot = "L"
     subjectNum = int(subject.split("_")[0][1:])
 
     rate, imudata = readImuData(norxDir + subject + '\Trial_'+trialNum+'.txt')

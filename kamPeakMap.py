@@ -25,8 +25,12 @@ if __name__ == '__main__':
     # subjects = ["S7_Lee","S23_Chen","S8_Yeung","S10_Fu","S11_Ng","S12_Lau","S16_Lam","S21_Chan","S22_Chen","S23_Chen"]
     # subjects = ["S40_Mom"]
     allData = None
+    allDataL = None
+    allDataR = None
     for subjectName in subjects:  # for every subject, subject name : S12_Lau
         subjectData = None
+        subjectDataL = pd.DataFrame([])
+        subjectDataR = pd.DataFrame([])
         print(subjectName)
         subjectNum = subjectName.split("_")[0]  # subject number : S12
         intsubNum = int(subjectNum[1:])
@@ -108,8 +112,18 @@ if __name__ == '__main__':
 
             data = pd.concat([subnum,usableImudata,test,kamy], axis=1)
 
-            subjectData = pd.concat([subjectData,data])
-            allData = pd.concat([allData,data])
+            # subjectData = pd.concat([subjectData,data])
+            # allData = pd.concat([allData,data])
+            if(foot == 'L'):
+                allDataL = pd.concat([allDataL,data])
+                subjectDataL = pd.concat([subjectDataL,data])
+            if (foot == 'R'):
+                allDataR = pd.concat([allDataR, data])
+                subjectDataR = pd.concat([subjectDataR, data])
 
-        # subjectData.to_csv("kam2cali/" + subjectNum + ".txt", sep="\t",float_format='%.6f',index=None)
-    allData.to_csv("kam2cali/" + "more-caliAll.txt", sep="\t", float_format='%.6f',index=None)
+        if((subjectDataL.shape)[0] > 0):
+            subjectDataL.to_csv("kam2cali/" + subjectNum + "-L.txt", sep="\t",float_format='%.6f',index=None)
+        if ((subjectDataR.shape)[0] > 0):
+            subjectDataR.to_csv("kam2cali/" + subjectNum + "-R.txt", sep="\t", float_format='%.6f', index=None)
+    allDataL.to_csv("kam2cali/" + "allData-L.txt", sep="\t", float_format='%.6f',index=None)
+    allDataR.to_csv("kam2cali/" + "allData-R.txt", sep="\t", float_format='%.6f', index=None)
