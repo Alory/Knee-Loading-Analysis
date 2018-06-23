@@ -17,9 +17,9 @@ if __name__ == '__main__':
     norxDir = "noraxon/"
     resultDir = "test/"
     testdir = "test/"
-    subject = "S7_Lee"
-    dir = "S7_0306-subject2"
-    trialNum = '1'
+    subject = "S32_Leng"
+    dir = "S32_0430-subject1"
+    trialNum = '3'
     foot = "L"
     subjectNum = int(subject.split("_")[0][1:])
 
@@ -43,6 +43,12 @@ if __name__ == '__main__':
     LOff = trialRange["Off"].iat[0]
     if (rate == 100):
         usableLen = LOff - LOn
+        if (subjectNum > 25):
+            kam = kam.loc[LOn:LOff, :]
+            kam = interpolateDfData(kam, int(usableLen / 2))
+            usableLen = (kam.shape)[0]
+            LOn = int(LOn / 2)
+            LOff = LOn + usableLen
     else:
         usableLen = 2 * (LOff - LOn)
         LOn = 2 * LOn
@@ -66,7 +72,7 @@ if __name__ == '__main__':
     # pl.plot(llacx)
     # pl.show()
 
-    pos1 = "RLGYz"
+    pos1 = "RLACy"
     pos2 = "LLGYz"
     imuPos1 = iot2imuPos[iotCols.index(pos1)]
     imuPos2 = iot2imuPos[iotCols.index(pos2)]
@@ -116,15 +122,11 @@ if __name__ == '__main__':
     maxvalue1 = list(map(lambda x:imudata[imuPos1][x],imumaxindex))
     maxvalue2 = list(map(lambda x: imudata[imuPos2][x], imumaxindex))
     p6.plot(imudata[imuPos1])  # [imuOn:imuOff])
-    p6.scatter(imumaxindex, maxvalue1, color='blue')
     p7.plot(imudata[imuPos2])  # [imuOn:imuOff])
-    p7.scatter(imumaxindex, maxvalue2, color='blue')
     p6.plot(iotdata[pos1].index + lags[pos1], flag1*iotdata[pos1], color="red")
     p7.plot(iotdata[pos2].index + lags[pos2], flag2*iotdata[pos2], color="red")
 
     p8.plot(kam.y)
-    p8.scatter(array(maxtab)[:, 0]+3, array(maxtab)[:, 1], color='blue')
-    p9.plot(np.diff(kam.y))
 
     pl.show()
     # pl.savefig(subject + "-trial" + trialNum + ".png")

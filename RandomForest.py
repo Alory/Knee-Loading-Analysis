@@ -58,13 +58,13 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'AC' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'allData-R'
+    name = 'iot-allData-R'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
 
     imucols = pd.DataFrame(testList)
-    data = pd.read_csv(out + name +'.txt',sep="\t")
+    data = pd.read_csv(iotout + name +'.txt',sep="\t")
 
     # thrshold = 0.01
     # data = data[data.y >= thrshold]
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     model.fit(X_train, y_train)
 
 
-    joblib.dump(model, 'model/' + method + '-70%-' + name + '.model')
+    # joblib.dump(model, 'model/' + method + '-' + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)

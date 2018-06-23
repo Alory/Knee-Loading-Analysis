@@ -93,8 +93,8 @@ def readIotData(filename, imuRate=100):
         npdata = interpolateData(rawData)
         data = pd.DataFrame(npdata)
         data.columns = iotCols
-    for pos in iotCols:
-        data[pos] = signal.savgol_filter(data[pos], 7, 3)
+    # for pos in iotCols:
+    #     data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return data
 
 
@@ -108,8 +108,8 @@ def readImuData(filename):
     data = pd.read_table(filename, skiprows=4, sep="\t", usecols=valueCols)  # skip first 4 rows
     imuRate = int(info.iat[1, 0])  # get imu rate
     data.columns = imuCols
-    for pos in iotCols:
-        data[pos] = signal.savgol_filter(data[pos], 7, 3)
+    # for pos in iotCols:
+    #     data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return imuRate, data
 
 '''
@@ -120,8 +120,8 @@ def readStaticData(filename):
                  20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 34]
     data = pd.read_table(filename, skiprows=4, sep="\t", usecols=valueCols)  # skip first 4 rows
     data.columns = imuCols
-    for pos in iotCols:
-        data[pos] = signal.savgol_filter(data[pos], 7, 3)
+    # for pos in iotCols:
+    #     data[pos] = signal.savgol_filter(data[pos], 7, 3)
     return data
 
 '''
@@ -585,8 +585,8 @@ def getSeqLagbyPeak(norV,iotV,flag):
     iotcol = iotV
     norxcol = norV
 
-    normax, normin = peakdet(norxcol, 150)
-    iotmax, iotmin = peakdet(iotcol, 150)
+    normax, normin = peakdet(norxcol, 200)
+    iotmax, iotmin = peakdet(iotcol, 200)
     lag = normin[0][0] -iotmin[0][0]
 
     return lag

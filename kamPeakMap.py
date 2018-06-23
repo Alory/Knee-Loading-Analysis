@@ -86,7 +86,7 @@ if __name__ == '__main__':
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
             imuSyncLag = imuSyncOnIndex[0] - 1
 
-            kamy = kamdata.loc[LOn:LOff,:].y
+            kamy = kamdata.loc[LOn:LOff,:].yinfoCols
             kamy = kamy.reset_index().iloc[:, 1]
             usableLen = (kamy.shape)[0]
 

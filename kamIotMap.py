@@ -26,7 +26,7 @@ if __name__ == '__main__':
     shift = 0
 
     subjects = os.listdir(testdir[:-1])#kam file name is same as noraxon file name
-    # subjects = ['S7_Lee']
+    # subjects = ['S32_Leng']
     iotFiles = os.listdir(iotdatadir[:-1])
     tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
@@ -40,9 +40,13 @@ if __name__ == '__main__':
     info = pd.read_table(filename)
     info = pd.get_dummies(info)
     allData = None
+    allDataL = None
+    allDataR = None
     for subjectName in subjects:#for every subject, subject name : S12_Lau
         print(subjectName)
         subjectData = None
+        subjectDataL = pd.DataFrame([])
+        subjectDataR = pd.DataFrame([])
 
         subjectNum = subjectName.split("_")[0]#subject number : S12
         iotSubjectFile = getFile(subjectNum,iotFiles)#iot file name
@@ -81,15 +85,21 @@ if __name__ == '__main__':
             LOff = trialRange["Off"].iat[0]
             if (rate == 100):
                 usableLen = LOff - LOn
+                if (int(subjectNum[1:]) > 25):
+                    kamdata = kamdata.loc[LOn:LOff,:]
+                    kamdata = interpolateDfData(kamdata, int(usableLen / 2))
+                    usableLen = (kamdata.shape)[0]
+                    LOn = int(LOn / 2)
+                    LOff = LOn + usableLen
             else:
                 usableLen = 2 * (LOff - LOn)
                 LOn = 2 * LOn
                 LOff = LOn + usableLen
 
-            shift = int(usableLen / 6)
-            usableLen = usableLen - 2 * shift
-            LOn = LOn + shift
-            LOff = LOn + usableLen
+            # shift = int(usableLen / 6)
+            # usableLen = usableLen - 2 * shift
+            # LOn = LOn + shift
+            # LOff = LOn + usableLen
 
             usableKam = kamdata[LOn:LOff]#usable kam
             imuSyncOnIndex = imudata[imudata["syncOn"] == 1].index.tolist()
@@ -103,6 +113,7 @@ if __name__ == '__main__':
             # iot2kamMat = iot2kam.loc[:,iotCols]
             kamy = kamdata[LOn:LOff].y
             kamy = kamy.reset_index().iloc[:, 1]
+            usableLen = (kamy.shape)[0]
             iot2kam = getIot2Kam(lags,iotdata,imuOn,imuOff)
             if (ifcontainNan(iot2kam)):
                 continue
@@ -112,10 +123,10 @@ if __name__ == '__main__':
                 iot2kam = gyroCali(caliData, iot2kam)
 
             # subject info data
-            value = subjectInfo.iloc[0, 1:10].values
+            value = subjectInfo.iloc[0, 1:].values
             test = [list(value)] * usableLen
             test = pd.DataFrame(test)
-            test.columns = infoCols[1:10]
+            test.columns = infoCols[1:]
 
             trialNumPd = [trialNum] * usableLen
             trialNumPd = pd.DataFrame(trialNumPd)
@@ -125,10 +136,16 @@ if __name__ == '__main__':
             subnum.columns = ['subject']
 
             data = pd.concat([subnum,trialNumPd,iot2kam,test,kamy],axis=1)
-            # data.to_csv("kam2allinfo/" + 'iot-' + subjectNum + '-' + trialNum + foot + ".txt", sep="\t", float_format='%.4f',index=None)
-            subjectData = pd.concat([data,subjectData])
-            allData = pd.concat([data,allData])
-        # subjectData.to_csv("kam2allinfo/" + 'iot-' + subjectNum + ".txt", sep="\t", float_format='%.6f',
-        #                        index=None)  # , header=None, index=None)
+            if (foot == 'L'):
+                allDataL = pd.concat([allDataL, data])
+                subjectDataL = pd.concat([subjectDataL, data])
+            if (foot == 'R'):
+                allDataR = pd.concat([allDataR, data])
+                subjectDataR = pd.concat([subjectDataR, data])
 
-    allData.to_csv("kam2allinfo/" + 'iot-all.txt', sep="\t",float_format='%.6f',index=None)
+        if ((subjectDataL.shape)[0] > 0):
+            subjectDataL.to_csv("kam2allinfo/" + 'iot-' + subjectNum + "-L.txt", sep="\t", float_format='%.6f', index=None)
+        if ((subjectDataR.shape)[0] > 0):
+            subjectDataR.to_csv("kam2allinfo/" + 'iot-' + subjectNum + "-R.txt", sep="\t", float_format='%.6f', index=None)
+    allDataL.to_csv("kam2allinfo/" + 'iot-' + "allData-L.txt", sep="\t", float_format='%.6f', index=None)
+    allDataR.to_csv("kam2allinfo/" + 'iot-' + "allData-R.txt", sep="\t", float_format='%.6f', index=None)

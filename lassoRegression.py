@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # testList = list(filter(lambda x: 'GY' in x, tempIotcols))
     testList = tempIotcols[0:24]
     lag = 0
-    name = 'allData-L'
+    name = 'iot-allData-L'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # caliData = getCaliData(staticData)
 
     imucols = pd.DataFrame(testList)
-    data = pd.read_csv(out + name +'.txt',sep="\t")
+    data = pd.read_csv(iotout + name +'.txt',sep="\t")
     tempdata = data[testList]
     # tempdata = tempdata.sub(caliData.iloc[0, :])
     delayData = delayedData(tempdata,lag)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     tol = 0.000001
 
 
-    lassoreg = LassoCV(eps=1e-7,cv=10,tol=tol,max_iter=iter,normalize=True).fit(X, y)#normalize=False
+    lassoreg = LassoCV(eps=1e-4,cv=10,tol=tol,max_iter=iter,normalize=True).fit(X, y)#normalize=False
     # lassoreg = Lasso(alpha=alpha, normalize=False, max_iter=iter, tol=tol).fit(X, y)
     score = lassoreg.score(X,y)
     alpha = lassoreg.alpha_
@@ -88,24 +88,24 @@ if __name__ == '__main__':
     predicted = lassoreg.predict(X)
     print(lassoreg.coef_)
 
-    m_log_alphas = -np.log10(lassoreg.alphas_)
-    plt.figure()
-    # ymin, ymax = np.min(y), np.max(y)
-    msePath = lassoreg.mse_path_
-    rmsePath = np.sqrt(msePath)
-    plt.plot(m_log_alphas, rmsePath, ':')
-    plt.plot(m_log_alphas, rmsePath.mean(axis=-1), 'k',
-             label='Average across the folds', linewidth=2)
-    plt.axvline(-np.log10(lassoreg.alpha_), linestyle='--', color='k',
-                label='alpha: CV estimate')
-    plt.title(name + ' LASSO regression\nRoot mean square error on each fold: coordinate descent ')
-    plt.legend()
-
-    plt.xlabel('-log(alpha)')
-    plt.ylabel('Root mean square error')
-    plt.axis('tight')
-    # plt.ylim(ymin, ymax)
-    plt.show()
+    # m_log_alphas = -np.log10(lassoreg.alphas_)
+    # plt.figure()
+    # # ymin, ymax = np.min(y), np.max(y)
+    # msePath = lassoreg.mse_path_
+    # rmsePath = np.sqrt(msePath)
+    # plt.plot(m_log_alphas, rmsePath, ':')
+    # plt.plot(m_log_alphas, rmsePath.mean(axis=-1), 'k',
+    #          label='Average across the folds', linewidth=2)
+    # plt.axvline(-np.log10(lassoreg.alpha_), linestyle='--', color='k',
+    #             label='alpha: CV estimate')
+    # plt.title(name + ' LASSO regression\nRoot mean square error on each fold: coordinate descent ')
+    # plt.legend()
+    #
+    # plt.xlabel('-log(alpha)')
+    # plt.ylabel('Root mean square error')
+    # plt.axis('tight')
+    # # plt.ylim(ymin, ymax)
+    # plt.show()
 
     from sklearn import metrics
     MSE = metrics.mean_squared_error(y, predicted)
@@ -138,25 +138,25 @@ if __name__ == '__main__':
     print(index)
     print(sortedpos)
 
-    # output = open('outcome/outcome.txt', 'a')
-    # output.write('\ntrial:' + name + '\n')
-    # output.write('lag:' + str(lag) + '\n')
-    # output.write('score:' + str(score) + '\n')
-    # output.write('kam max:' + str(max(data['y'])) + '\n')
-    # mean = np.mean(data['y'])
-    # output.write('kam mean:' + str(mean) + '\n')
-    # output.write('alpha:' + str(alpha) + '\n')
-    # output.write('iteration:' + str(lassoreg.n_iter_) + '\n')
-    # output.write('tolerance:' + str(tol) + '\n')
-    # output.write('MSE:' + str(MSE) + '\n')
-    # output.write('RMSE:' + str(RMSE) + '\n')
-    # output.write('RMSE / mean:' + str(RMSE/mean) + '\n')
-    # output.write('sorted coef:' + str(index) + '\n')
-    # output.write('corresponding pos:' + str(sortedpos) + '\n')
-    # output.close()
+    output = open('outcome/outcome.txt', 'a')
+    output.write('\ntrial:' + name + '\n')
+    output.write('lag:' + str(lag) + '\n')
+    output.write('score:' + str(score) + '\n')
+    output.write('kam max:' + str(max(data['y'])) + '\n')
+    mean = np.mean(data['y'])
+    output.write('kam mean:' + str(mean) + '\n')
+    output.write('alpha:' + str(alpha) + '\n')
+    output.write('iteration:' + str(lassoreg.n_iter_) + '\n')
+    output.write('tolerance:' + str(tol) + '\n')
+    output.write('MSE:' + str(MSE) + '\n')
+    output.write('RMSE:' + str(RMSE) + '\n')
+    output.write('RMSE / mean:' + str(RMSE/mean) + '\n')
+    output.write('sorted coef:' + str(index) + '\n')
+    output.write('corresponding pos:' + str(sortedpos) + '\n')
+    output.close()
 
 
 
-    # plt.show()
+    plt.show()
 
 

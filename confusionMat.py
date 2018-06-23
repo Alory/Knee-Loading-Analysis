@@ -52,8 +52,8 @@ modelR = joblib.load('model/' + 'RandomForest-allData-R.model')
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
-    # names = ['S7','S8','S10','S11','S12','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
-    names = ['S41']
+    # names = ['S7','S8','S10','S11','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
+    names = ['S28']
     feet = ['L','R']
 
     for name in names:
