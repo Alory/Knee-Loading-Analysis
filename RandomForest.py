@@ -89,12 +89,13 @@ if __name__ == '__main__':
     from sklearn import ensemble
 
     method = 'RandomForest'
-
-    model = ensemble.RandomForestRegressor(n_estimators=50,oob_score=True,bootstrap=True)#,max_features=20
+    trees = 5
+    depth = 10
+    model = ensemble.RandomForestRegressor(n_estimators=trees,oob_score=True,bootstrap=True,max_depth=depth)#,max_features=20
     model.fit(X_train, y_train)
 
 
-    joblib.dump(model, 'model/' + method + '-' + name + '.model')
+    joblib.dump(model, 'model/' + method + '-trees-' + str(trees) + '-depth-' + str(depth) + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)
@@ -117,7 +118,8 @@ if __name__ == '__main__':
     p1 = plt.subplot(111)
     p1.scatter(y_test, predicted)
     p1.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4)
-    p1.set_title(name, fontsize=20)
+    title = name + '-' + method + '-' + str(trees) + '-decision trees' + '-depth-' + str(depth)
+    p1.set_title(title, fontsize=12)
     p1.set_xlabel('Measured', fontsize=20)
     p1.set_ylabel('Predicted', fontsize=20)
     plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-method-' + method + str(seed) + ".png")
