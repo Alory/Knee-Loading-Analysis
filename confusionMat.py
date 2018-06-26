@@ -54,7 +54,7 @@ if __name__ == '__main__':
     lag = 0
     names = ['S7','S8','S10','S11','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
     iotSubjects = ['iot-S10','iot-S11','iot-S16','iot-S18','iot-S21','iot-S22','iot-S23','iot-S33','iot-S35','iot-S7','iot-S8']#,'iot-S12'
-    names = ['iot-S35']
+    names = iotSubjects#['iot-S12']
     feet = ['L','R']
 
     for name in names:
@@ -119,7 +119,8 @@ if __name__ == '__main__':
             maxtab, mintab = peakdet(y, 0.01)
             peakIndex = maxtab[:, 0]
             peakValues = maxtab[:, 1]
-            thrshold = filterIndex * np.mean(peakValues)
+            maxValue = np.max(y.values)
+            thrshold = filterIndex * maxValue
 
             highdata = data[data.y >= thrshold]
             lowdata = data[data.y < thrshold]
@@ -162,11 +163,11 @@ if __name__ == '__main__':
             mat[0,1] = mat[0,1] / realLowNum
             mat[1,0] = mat[1,0] / realHighNum
 
-            # pl.savefig('outcome/' + subname + '-prediction.png')
+            pl.savefig('outcome/' + subname + '-prediction.png')
             fig = print_confusion_matrix(mat,['< 0.8*max','>= 0.8*max'], fontsize=8,title=subname)
 
-            # pl.savefig('outcome/' + subname + 'confusionMat.png')
-            pl.show()
+            pl.savefig('outcome/' + subname + 'confusionMat.png')
+            # pl.show()
 
             result = [score,RMSE,mean, RMSE / mean, mat[1,1], mat[0, 0], mat[0, 1], mat[1, 0]]
             for i in range(len(result)):
@@ -185,6 +186,6 @@ if __name__ == '__main__':
             # output.write('FP:' + str(mat[0, 1]) + '\n')
             # output.write('FN:' + str(mat[1, 0]) + '\n')
 
-            # output = open('outcome/testresult.txt', 'a')
-            # output.write(subname + '\t' + result + '\n')
-            # output.close()
+            output = open('outcome/testresult.txt', 'a')
+            output.write(subname + '\t' + result + '\n')
+            output.close()
