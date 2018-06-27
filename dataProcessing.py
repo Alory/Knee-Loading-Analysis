@@ -768,3 +768,19 @@ def print_confusion_matrix(confusion_matrix, class_names, title='Confusion matri
     pl.ylabel('True data')
     pl.xlabel('Predicted data')
     return fig
+
+'''
+to sort the importance of features
+coef is the importance coefficient from random forest model's attribute 'feature_importances_'
+all 35 features are
+['LLACx','LLACy','LLACz','LLGYx','LLGYy','LLGYz','LMACx','LMACy','LMACz','LMGYx','LMGYy','LMGYz',
+           'RLACx','RLACy','RLACz','RLGYx','RLGYy','RLGYz','RMACx','RMACy','RMACz','RMGYx','RMGYy','RMGYz',
+           'age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid', 'RankleWid',
+           'gender_F', 'gender_M'] 
+'''
+def sortFeature(coef,features):
+    coefMap = []
+    for i in range(len(coef)):
+        coefMap.append((features[i],coef[i]))
+    sortedMap = sorted(coefMap, key=lambda x:x[1],reverse=True)
+    return sortedMap
