@@ -55,8 +55,8 @@ infoFile = 'subjectInfo.txt'
 out = 'kam2cali/'
 iotout = 'kam2allinfo/'
 if __name__ == '__main__':
-    # testList = list(filter(lambda x: 'AC' in x, tempIotcols))
-    testList = tempIotcols[0:24]
+    testList = list(filter(lambda x: 'GY' in x, tempIotcols))
+    # testList = tempIotcols[0:24]
     lag = 0
     name = 'iot-allData-L'
 
@@ -89,13 +89,13 @@ if __name__ == '__main__':
     from sklearn import ensemble
 
     method = 'RandomForest'
-    trees = 5
+    trees = 50
     depth = 10
-    model = ensemble.RandomForestRegressor(n_estimators=trees,oob_score=True,bootstrap=True,max_depth=depth)#,max_features=20
+    model = ensemble.RandomForestRegressor(n_estimators=trees,oob_score=True,bootstrap=True)#,max_features=20
     model.fit(X_train, y_train)
 
 
-    joblib.dump(model, 'model/' + method + '-trees-' + str(trees) + '-depth-' + str(depth) + name + '.model')
+    # joblib.dump(model, 'model/' + method + '-trees-' + str(trees) + '-depth-' + str(depth) + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)
@@ -122,11 +122,11 @@ if __name__ == '__main__':
     p1.set_title(title, fontsize=12)
     p1.set_xlabel('Measured', fontsize=20)
     p1.set_ylabel('Predicted', fontsize=20)
-    plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-method-' + method + str(seed) + ".png")
+    # plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-method-' + method + str(seed) + ".png")
 
     output = open('outcome/outcome.txt', 'a')
     output.write('\ntrial:' + name + '\n')
-    output.write('data size:' + str(data.shape) + '\n')
+    output.write('data size:' + str(tempdata.shape) + '\n')
     output.write('method:' + method + '\n')
     output.write('training dataset R2 score:' + str(trainScore) + '\n')
     output.write('test dataset R2 score:' + str(testScore) + '\n')
