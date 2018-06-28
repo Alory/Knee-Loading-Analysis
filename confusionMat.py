@@ -49,17 +49,25 @@ iotout = 'kam2allinfo/'
 modelL = joblib.load('model/' + 'RandomForest-iot-allData-L.model')
 modelR = joblib.load('model/' + 'RandomForest-iot-allData-R.model')
 
+# modelL = joblib.load('model/' + 'RandomForest-70%-allData-L.model')
+# modelR = joblib.load('model/' + 'RandomForest-70%-allData-R.model')
+
 if __name__ == '__main__':
     testList = tempIotcols[0:24]
     lag = 0
     names = ['S7','S8','S10','S11','S16','S21','S22','S23','S26','S28','S29','S30','S31','S32','S33','S35','S37','S38','S39','S40','S41']
-    iotSubjects = ['iot-S10','iot-S11','iot-S16','iot-S18','iot-S21','iot-S22','iot-S23','iot-S33','iot-S35','iot-S7','iot-S8']#,'iot-S12'
-    names = iotSubjects#['iot-S12']
+    iotSubjects = ['iot-S10','iot-S11','iot-S16','iot-S18','iot-S21','iot-S22','iot-S23','iot-S33','iot-S35','iot-S7','iot-S8','iot-S12']#,
+    names = iotSubjects
     feet = ['L','R']
+    subjects = os.listdir(iotout[:-1])
 
+    output = open('outcome/testresult.txt', 'a')
+    output.write('\n======\n')
     for name in names:
         for foot in feet:
             subname = name + '-' + foot
+            if(subname + '.txt' not in subjects):
+                continue
             imucols = pd.DataFrame(testList)
             data = pd.read_csv(iotout + subname + '.txt', sep="\t")
 
@@ -186,6 +194,6 @@ if __name__ == '__main__':
             # output.write('FP:' + str(mat[0, 1]) + '\n')
             # output.write('FN:' + str(mat[1, 0]) + '\n')
 
-            output = open('outcome/testresult.txt', 'a')
+
             output.write(subname + '\t' + result + '\n')
-            output.close()
+    output.close()
