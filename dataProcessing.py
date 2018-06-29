@@ -759,7 +759,7 @@ def print_confusion_matrix(confusion_matrix, class_names, title='Confusion matri
     )
     fig = pl.figure(figsize=figsize)
     try:
-        heatmap = sns.heatmap(df_cm, cbar=False,fmt=".2f",annot=True,annot_kws={"size":18})# annot=True, fmt="d",
+        heatmap = sns.heatmap(df_cm, cbar=True,fmt=".2f",annot=True,annot_kws={"size":18})# annot=True, fmt="d",
     except ValueError:
         raise ValueError("Confusion matrix values must be integers.")
     heatmap.yaxis.set_ticklabels(heatmap.yaxis.get_ticklabels(), rotation=0, ha='right', fontsize=fontsize)
