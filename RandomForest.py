@@ -55,10 +55,11 @@ infoFile = 'subjectInfo.txt'
 out = 'kam2cali/'
 iotout = 'kam2allinfo/'
 if __name__ == '__main__':
-    testList = list(filter(lambda x: 'GY' in x, tempIotcols))
+    axis = 'LM'
+    testList = list(filter(lambda x: axis in x, tempIotcols))
     # testList = tempIotcols[0:24]
     lag = 0
-    name = 'iot-allData-L'
+    name = 'iot-allData-R'
 
     subjects = os.listdir('noraxon')
     subjectFile = getFile(name,subjects)
@@ -125,7 +126,7 @@ if __name__ == '__main__':
     # plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-method-' + method + str(seed) + ".png")
 
     output = open('outcome/outcome.txt', 'a')
-    output.write('\ntrial:' + name + '\n')
+    output.write('\ntrial:' + name + '-' + axis + '\n')
     output.write('data size:' + str(tempdata.shape) + '\n')
     output.write('method:' + method + '\n')
     output.write('training dataset R2 score:' + str(trainScore) + '\n')
