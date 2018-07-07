@@ -200,7 +200,7 @@ def gyroCali(zeroOffset,data):
     return data
 
 
-def getPreData(dataCols,rotMat):
+def getPreData(dataCols,caliData,rotMat):
     values = dataCols.values()
     colNum = min(list(map(lambda x: len(x), values)))
     msgCols = dict(LLACx=[], LLACy=[], LLACz=[], LLGYx=[], LLGYy=[], LLGYz=[], LMACx=[], LMACy=[], LMACz=[],
@@ -253,7 +253,7 @@ if __name__ == '__main__':
 
         if(countFlag == 100):
             countFlag = 0
-            preData = getPreData(dataCols,rotMat)
+            preData = getPreData(dataCols,caliData,rotMat)
             Lkam = modelL.predict(preData)
             Rkam = modelR.predict(preData)
 
@@ -267,17 +267,18 @@ if __name__ == '__main__':
 
     if(countFlag > 0):
         countFlag = 0
-        preData = getPreData(dataCols,rotMat)
-        Lkam = modelL.predict(preData)
-        Rkam = modelR.predict(preData)
+        preData = getPreData(dataCols,caliData,rotMat)
+        if((preData.shape)[0] > 0):
+            Lkam = modelL.predict(preData)
+            Rkam = modelR.predict(preData)
 
-        Lkamall =  np.concatenate((Lkamall, Lkam))
-        Rkamall = np.concatenate((Rkamall, Rkam))
+            Lkamall =  np.concatenate((Lkamall, Lkam))
+            Rkamall = np.concatenate((Rkamall, Rkam))
 
-        p1.plot(Lkamall, 'r')
-        p2.plot(Rkamall, 'g')
-        plt.draw()
-        plt.show()
+            p1.plot(Lkamall, 'r')
+            p2.plot(Rkamall, 'g')
+            plt.draw()
+    plt.show()
 
 
 
