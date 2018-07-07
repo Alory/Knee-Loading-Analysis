@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ae4b3ba7-fd59-4d3b-bc3d-e89491aab456" name="Default" comment="" />
+    <list default="true" id="ae4b3ba7-fd59-4d3b-bc3d-e89491aab456" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/dataProcessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataProcessing.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="dataProcessing.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dataProcessing.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dataProcessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13158">
-              <caret line="785" column="20" selection-start-line="785" selection-start-column="20" selection-end-line="785" selection-end-column="20" />
+            <state relative-caret-position="553">
+              <caret line="726" column="46" selection-start-line="726" selection-start-column="46" selection-end-line="726" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -32,13 +34,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="kamPredictionApp.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="kamPredictionApp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/kamPredictionApp.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-612">
               <caret line="15" column="75" lean-forward="true" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kamPeakMap.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/kamPeakMap.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="369">
+              <caret line="41" column="31" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kamIotMap.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/kamIotMap.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="64" column="34" lean-forward="true" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -55,8 +78,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>interpolate</find>
-      <find>lag = 25</find>
       <find>resultList</find>
       <find>lag</find>
       <find>corr</find>
@@ -85,6 +106,8 @@
       <find>imuCols</find>
       <find>find</find>
       <find>iloc</find>
+      <find>readStaticData</find>
+      <find>getCaliData</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -102,12 +125,12 @@
         <option value="$PROJECT_DIR$/iotDataProcess.py" />
         <option value="$PROJECT_DIR$/dtwSyncTest.py" />
         <option value="$PROJECT_DIR$/dataTest.py" />
-        <option value="$PROJECT_DIR$/dataProcessing.py" />
         <option value="$PROJECT_DIR$/lassoTest.py" />
         <option value="$PROJECT_DIR$/kamPeakMap.py" />
         <option value="$PROJECT_DIR$/lassoRegression.py" />
         <option value="$PROJECT_DIR$/lagtets.py" />
         <option value="$PROJECT_DIR$/featureData.py" />
+        <option value="$PROJECT_DIR$/dataProcessing.py" />
       </list>
     </option>
   </component>
@@ -128,36 +151,6 @@
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
               <item name="Knee-Loading-Analysis" type="cbb8eebc:String" user="Knee-Loading-Analysis" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-              <item name="C:" type="cbb8eebc:String" user="C:" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-              <item name="C:" type="cbb8eebc:String" user="C:" />
-              <item name="Users" type="cbb8eebc:String" user="Users" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-              <item name="C:" type="cbb8eebc:String" user="C:" />
-              <item name="Users" type="cbb8eebc:String" user="Users" />
-              <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-              <item name="C:" type="cbb8eebc:String" user="C:" />
-              <item name="Users" type="cbb8eebc:String" user="Users" />
-              <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
-              <item name="Desktop" type="cbb8eebc:String" user="Desktop" />
             </path>
           </expand>
           <select />
@@ -366,13 +359,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dataProcessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="31" column="21" lean-forward="true" selection-start-line="31" selection-start-column="21" selection-end-line="31" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/iotDataProcess.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="798">
@@ -487,13 +473,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataProcessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13158">
-          <caret line="785" column="20" selection-start-line="785" selection-start-column="20" selection-end-line="785" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/featureData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -522,13 +501,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/kamPeakMap.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="70" column="50" selection-start-line="70" selection-start-column="50" selection-end-line="70" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lassoTest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -543,6 +515,30 @@
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kamPeakMap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="41" column="31" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kamIotMap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="64" column="34" lean-forward="true" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataProcessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="553">
+          <caret line="726" column="46" selection-start-line="726" selection-start-column="46" selection-end-line="726" selection-end-column="46" />
         </state>
       </provider>
     </entry>

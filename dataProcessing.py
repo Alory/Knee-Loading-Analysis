@@ -704,6 +704,7 @@ def getCaliData(staticData):
     return caliData,rotMat
 
 # input trial data and the rotate matrix dictionary, output the calibrated data
+# this function is to use rotation matrix for acclerometer calibration
 def calibrateData(data,rotMat):
     acAxis = {'llac': ['LLACx', 'LLACy', 'LLACz'],
               'lmac': ['LMACx', 'LMACy', 'LMACz'],
@@ -723,6 +724,7 @@ def calibrateData(data,rotMat):
 
     return data
 
+# this function is to calculate the zero drift for gyroscope calibration
 def gyroCali(zeroOffset,data):
     acCols = list(filter(lambda x: 'AC' in x, iotCols))
 
