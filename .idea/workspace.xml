@@ -17,8 +17,8 @@
       <file leaf-file-name="dataProcessing.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dataProcessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16388">
-              <caret line="972" column="48" selection-start-line="972" selection-start-column="48" selection-end-line="972" selection-end-column="48" />
+            <state relative-caret-position="13158">
+              <caret line="785" column="20" selection-start-line="785" selection-start-column="20" selection-end-line="785" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -32,47 +32,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dataTest.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataTest.py">
+      <file leaf-file-name="kamPredictionApp.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/kamPredictionApp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lagtets.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lagtets.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-15">
-              <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="kamPeakMap.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/kamPeakMap.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="70" column="50" selection-start-line="70" selection-start-column="50" selection-end-line="70" selection-end-column="50" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lassoRegression.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lassoRegression.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="featureData.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/featureData.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
+            <state relative-caret-position="-612">
+              <caret line="15" column="75" lean-forward="true" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -120,6 +87,9 @@
       <find>iloc</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -157,7 +127,37 @@
           <expand>
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="KamProcessing" type="cbb8eebc:String" user="KamProcessing" />
+              <item name="Knee-Loading-Analysis" type="cbb8eebc:String" user="Knee-Loading-Analysis" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
+              <item name="C:" type="cbb8eebc:String" user="C:" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
+              <item name="C:" type="cbb8eebc:String" user="C:" />
+              <item name="Users" type="cbb8eebc:String" user="Users" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
+              <item name="C:" type="cbb8eebc:String" user="C:" />
+              <item name="Users" type="cbb8eebc:String" user="Users" />
+              <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
+              <item name="C:" type="cbb8eebc:String" user="C:" />
+              <item name="Users" type="cbb8eebc:String" user="Users" />
+              <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
+              <item name="Desktop" type="cbb8eebc:String" user="Desktop" />
             </path>
           </expand>
           <select />
@@ -335,14 +335,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.44700462" visible="true" weight="0.1421875" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.44700462" visible="true" weight="0.1421875" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32920355" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="5" visible="true" weight="0.4340021" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="5" weight="0.4340021" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32920355" />
       <window_info anchor="right" x="38" y="361" width="192" height="218" id="Structure" order="3" sideWeight="0.5871314" side_tool="true" visible="true" weight="0.13333334" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32920355" />
@@ -366,13 +366,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lassoTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1064">
-          <caret line="56" column="36" selection-start-line="56" selection-start-column="36" selection-end-line="56" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataProcessing.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="551">
@@ -457,20 +450,8 @@
     <entry file="file://E:/Programs/Anaconda3/Lib/site-packages/numpy/lib/npyio.py" />
     <entry file="file://E:/Programs/Anaconda3/Lib/site-packages/pandas/core/frame.py" />
     <entry file="file://$PROJECT_DIR$/S4_Frame.csv" />
-    <entry file="file://$PROJECT_DIR$/imu.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30800">
-          <caret line="1925" selection-start-line="1925" selection-end-line="1925" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iot.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8992">
-          <caret line="562" selection-start-line="562" selection-end-line="562" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/imu.txt" />
+    <entry file="file://$PROJECT_DIR$/iot.txt" />
     <entry file="file://$PROJECT_DIR$/Trial_2_R_1.txt" />
     <entry file="file://E:/Programs/Anaconda3/Lib/site-packages/scipy/signal/signaltools.py" />
     <entry file="file://E:/Programs/Anaconda3/Lib/site-packages/matplotlib/figure.py" />
@@ -506,24 +487,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lassoTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataProcessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16388">
-          <caret line="972" column="48" selection-start-line="972" selection-start-column="48" selection-end-line="972" selection-end-column="48" />
+        <state relative-caret-position="13158">
+          <caret line="785" column="20" selection-start-line="785" selection-start-column="20" selection-end-line="785" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataTest.py">
+    <entry file="file://$PROJECT_DIR$/featureData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+        <state relative-caret-position="289">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
         </state>
       </provider>
     </entry>
@@ -534,10 +508,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/featureData.py">
+    <entry file="file://$PROJECT_DIR$/lagtets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        <state relative-caret-position="17">
+          <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="39" column="21" lean-forward="true" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -548,10 +529,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lagtets.py">
+    <entry file="file://$PROJECT_DIR$/lassoTest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15">
-          <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
+        <state relative-caret-position="357">
+          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/kamPredictionApp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-612">
+          <caret line="15" column="75" lean-forward="true" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
