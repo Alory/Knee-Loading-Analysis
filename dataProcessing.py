@@ -35,6 +35,7 @@ flags = list(iot2imuCols.values())
 hongkongG = 978.5
 
 std = np.array([hongkongG, 0, 0])
+iotstd = np.array([0,-hongkongG,0])
 
 subjectMass = {'S8':67.7,'S10':59.5,'S11':66.3,'S12':67.6,'S13':45.4,'S15':53.6,'S16':88.7,'S17':61.5,
         'S18':54.9,'S21':85.7,'S22':64.1,'S23':85.8}
@@ -696,8 +697,8 @@ def getCaliData(staticData):
         data = caliData[acAxis[axis]]
         data = (np.array(data))[0]
         # print(data,std)
-        R = rotation_matrix(data, std)
-        index = np.linalg.norm(std) / np.linalg.norm(data)
+        R = rotation_matrix(data, iotstd)
+        index = np.linalg.norm(iotstd) / np.linalg.norm(data)
         rotMat[axis] = [R,index]
 
 

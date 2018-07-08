@@ -55,14 +55,14 @@ infoFile = 'subjectInfo.txt'
 out = 'kam2cali/'
 iotout = 'kam2allinfo/'
 if __name__ == '__main__':
-    axis = 'LM'
-    testList = list(filter(lambda x: axis in x, tempIotcols))
-    # testList = tempIotcols[0:24]
+    # axis = 'LM'
+    # testList = list(filter(lambda x: axis in x, tempIotcols))
+    testList = tempIotcols[0:24]
     lag = 0
-    name = 'iot-allData-R'
+    name = 'iot-allData-L'
 
-    subjects = os.listdir('noraxon')
-    subjectFile = getFile(name,subjects)
+    # subjects = os.listdir('noraxon')
+    # subjectFile = getFile(name,subjects)
 
     imucols = pd.DataFrame(testList)
     data = pd.read_csv(iotout + name +'.txt',sep="\t")
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     model.fit(X_train, y_train)
 
 
-    # joblib.dump(model, 'model/' + method + '-trees-' + str(trees) + '-depth-' + str(depth) + name + '.model')
+    joblib.dump(model, 'model/RandomForest-' + name + '.model')
 
     trainScore = model.score(X_train, y_train)
     testScore = model.score(X_test, y_test)
@@ -119,14 +119,15 @@ if __name__ == '__main__':
     p1 = plt.subplot(111)
     p1.scatter(y_test, predicted)
     p1.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4)
-    title = name + '-' + method + '-' + str(trees) + '-decision trees' + '-depth-' + str(depth)
+    # title = name + '-' + method + '-' + str(trees) + '-decision trees' + '-depth-' + str(depth)
+    title = name
     p1.set_title(title, fontsize=12)
     p1.set_xlabel('Measured', fontsize=20)
     p1.set_ylabel('Predicted', fontsize=20)
-    # plt.savefig('outcome/' + name + '-lag-' + str(lag) + '-method-' + method + str(seed) + ".png")
+    plt.savefig('outcome/RandomForest-' + name + '.png')
 
     output = open('outcome/outcome.txt', 'a')
-    output.write('\ntrial:' + name + '-' + axis + '\n')
+    output.write('\ntrial:' + name + '\n')
     output.write('data size:' + str(tempdata.shape) + '\n')
     output.write('method:' + method + '\n')
     output.write('training dataset R2 score:' + str(trainScore) + '\n')
