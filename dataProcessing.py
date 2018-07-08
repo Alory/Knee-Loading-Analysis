@@ -697,8 +697,8 @@ def getCaliData(staticData):
         data = caliData[acAxis[axis]]
         data = (np.array(data))[0]
         # print(data,std)
-        R = rotation_matrix(data, iotstd)
-        index = np.linalg.norm(iotstd) / np.linalg.norm(data)
+        R = rotation_matrix(data, std)
+        index = np.linalg.norm(std) / np.linalg.norm(data)
         rotMat[axis] = [R,index]
 
 

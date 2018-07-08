@@ -7,7 +7,7 @@ from scipy import interpolate
 from math import acos, atan2, cos, pi, sin
 
 hongkongG = 978.5
-std = np.array([hongkongG, 0, 0])
+std = np.array([0,-hongkongG,0])
 
 iotCols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
