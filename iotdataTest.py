@@ -2,17 +2,17 @@ from dataProcessing import *
 from sklearn.externals import joblib
 import os
 
-modelL = joblib.load('model/' + 'RandomForest-iot-allData-L-LM.model')
-modelR = joblib.load('model/' + 'RandomForest-iot-allData-R-RL.model')
+modelL = joblib.load('model/' + 'RandomForest-test-L.model')
+modelR = joblib.load('model/' + 'RandomForest-test-R.model')
 
 if __name__ == '__main__':
     iotdatadir = "iot/"
 
     iotSubjects = ['iot-S10', 'iot-S11', 'iot-S16', 'iot-S18', 'iot-S21', 'iot-S22', 'iot-S23', 'iot-S33', 'iot-S35',
                    'iot-S7', 'iot-S8', 'iot-S12']
-    subjectFile = 'S10_0306-subject5'
-    subjectName = 'S10_Fu'
-    trialNum = 5
+    subjectFile = 'S35_0508-subject1'
+    subjectName = 'S35_Chau'
+    trialNum = 2
     iotFiles = os.listdir(iotdatadir + subjectFile + '/')
     tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
@@ -53,11 +53,13 @@ if __name__ == '__main__':
 
     data = pd.concat([caliIotdata, test], axis=1)
     # data.to_csv(iotdatadir + subjectFile + '/' + subjectFile + '-' + str(trialNum) + ".txt", sep="\t", float_format='%.6f', index=None)
-    axisL = 'LM'
-    testListL = list(filter(lambda x: axisL in x, tempIotcols))
+    testListL = tempIotcols[0:24]
+    testListR = tempIotcols[0:24]
+    # axisL = 'LM'
+    # testListL = list(filter(lambda x: axisL in x, tempIotcols))
+    # axisR = 'LM'
+    # testListR = list(filter(lambda x: axisR in x, tempIotcols))
     testListL.extend(infoCols)
-    axisR = 'RL'
-    testListR = list(filter(lambda x: axisR in x, tempIotcols))
     testListR.extend(infoCols)
     Lkam = modelL.predict(data[testListL])
     Rkam = modelR.predict(data[testListR])
