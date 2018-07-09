@@ -2,24 +2,24 @@ from dataProcessing import *
 from sklearn.externals import joblib
 import os
 
-modelL = joblib.load('model/' + 'RandomForest-iot-allData-L.model')
-modelR = joblib.load('model/' + 'RandomForest-iot-allData-R.model')
+modelL = joblib.load('model/' + 'RandomForest-iot-allData-L-LM.model')
+modelR = joblib.load('model/' + 'RandomForest-iot-allData-R-RL.model')
 
 if __name__ == '__main__':
     iotdatadir = "iot/"
 
     iotSubjects = ['iot-S10', 'iot-S11', 'iot-S16', 'iot-S18', 'iot-S21', 'iot-S22', 'iot-S23', 'iot-S33', 'iot-S35',
                    'iot-S7', 'iot-S8', 'iot-S12']
-    subjectFile = 'S11_0306-subject6'
-    subjectName = 'S11_Ng'
-    trialNum = 1
+    subjectFile = 'S10_0306-subject5'
+    subjectName = 'S10_Fu'
+    trialNum = 5
     iotFiles = os.listdir(iotdatadir + subjectFile + '/')
     tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
     , 'RLACx', 'RLACy', 'RLACz', 'RLGYx', 'RLGYy', 'RLGYz'
     , 'RMACx', 'RMACy', 'RMACz', 'RMGYx', 'RMGYy', 'RMGYz','KAM','mass']
 
-    infoCols = ['subject', 'age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid',
+    infoCols = ['age', 'mass', 'height', 'Lleglen', 'LkneeWid', 'Rleglen', 'LankleWid', 'RkneeWid',
                 'RankleWid', 'gender_F', 'gender_M']
 
     filename = 'subjectInfo.txt'
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     value = subjectInfo.iloc[0, 1:].values
     test = [list(value)] * usableLen
     test = pd.DataFrame(test)
-    test.columns = infoCols[1:]
+    test.columns = infoCols
 
     # trialNumPd = [trialNum] * usableLen
     # trialNumPd = pd.DataFrame(trialNumPd)
@@ -53,8 +53,14 @@ if __name__ == '__main__':
 
     data = pd.concat([caliIotdata, test], axis=1)
     # data.to_csv(iotdatadir + subjectFile + '/' + subjectFile + '-' + str(trialNum) + ".txt", sep="\t", float_format='%.6f', index=None)
-    Lkam = modelL.predict(data)
-    Rkam = modelR.predict(data)
+    axisL = 'LM'
+    testListL = list(filter(lambda x: axisL in x, tempIotcols))
+    testListL.extend(infoCols)
+    axisR = 'RL'
+    testListR = list(filter(lambda x: axisR in x, tempIotcols))
+    testListR.extend(infoCols)
+    Lkam = modelL.predict(data[testListL])
+    Rkam = modelR.predict(data[testListR])
 
     frameFile = subjectNum + "_Frame.csv"  # S12_Frame.csv
     frameRange = getFrame('test/' + subjectName + "/" + frameFile)  # result/S12_Lau/S12_Frame.csv
