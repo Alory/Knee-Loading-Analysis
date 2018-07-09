@@ -62,7 +62,7 @@ if __name__ == '__main__':
         if(subjectNum != 'S18'):
             norxRate,norxstaticData = readImuData(norxDir + subjectName + "/static.txt")
             staticData = readIotData(iotdatadir + iotSubjectFile + "/modified-static.txt",norxRate)
-            caliData, rotMat = getCaliData(staticData)
+            caliData, rotMat = getCaliData(staticData,iotstd)
 
         frameFile = subjectNum + "_Frame.csv"#S12_Frame.csv
         frameRange = getFrame(resultDir + subjectName + "/" + frameFile)#result/S12_Lau/S12_Frame.csv

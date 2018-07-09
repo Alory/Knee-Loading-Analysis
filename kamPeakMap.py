@@ -40,7 +40,7 @@ if __name__ == '__main__':
         imuTrialList = os.listdir(norxDir + subjectName)  # imu data of trials
         resultList = filterKamList(resultDir + subjectName)  # kam data of trials
         staticData = readStaticData(norxDir + subjectName + "/static.txt")
-        caliData, rotMat = getCaliData(staticData)
+        caliData, rotMat = getCaliData(staticData,std)
         # caliData = getCaliData(staticData)
         # caliData = caliData.iloc[:, 2:]
         print(resultList)

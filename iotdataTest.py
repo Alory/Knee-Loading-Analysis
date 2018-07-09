@@ -10,9 +10,9 @@ if __name__ == '__main__':
 
     iotSubjects = ['iot-S10', 'iot-S11', 'iot-S16', 'iot-S18', 'iot-S21', 'iot-S22', 'iot-S23', 'iot-S33', 'iot-S35',
                    'iot-S7', 'iot-S8', 'iot-S12']
-    subjectFile = 'S21_0326-subject3'
-    subjectName = 'S21_Chan'
-    trialNum = 4
+    subjectFile = 'S11_0306-subject6'
+    subjectName = 'S11_Ng'
+    trialNum = 1
     iotFiles = os.listdir(iotdatadir + subjectFile + '/')
     tempIotcols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     rate=100
     staticData = readIotData(iotdatadir + subjectFile + "/modified-static.txt", rate)
-    caliData, rotMat = getCaliData(staticData)
+    caliData, rotMat = getCaliData(staticData,iotstd)
 
     iotdata = readIotData(iotdatadir + subjectFile + '/' + iotSubjectFile, rate)
     acCaliIotdata = calibrateData(iotdata, rotMat)
@@ -59,9 +59,9 @@ if __name__ == '__main__':
     frameFile = subjectNum + "_Frame.csv"  # S12_Frame.csv
     frameRange = getFrame('test/' + subjectName + "/" + frameFile)  # result/S12_Lau/S12_Frame.csv
 
-    fileNameL = 'Trial_'+str(trialNum) + '_R_12.txt'
+    fileNameL = 'Trial_'+str(trialNum) + '_L_1.txt'
     kamdataL = readKam('test/' + subjectName + "/" + fileNameL, rate)
-    fileNameR = 'Trial_' + str(trialNum) + '_R_12.txt'
+    fileNameR = 'Trial_' + str(trialNum) + '_R_1.txt'
     kamdataR = readKam('test/' + subjectName + "/" + fileNameR, rate)
 
     # trialRangeL = frameRange.loc[(frameRange["Trial No."] == int(trialNum-1))

@@ -7,7 +7,7 @@ from scipy import interpolate
 from math import acos, atan2, cos, pi, sin
 
 hongkongG = 978.5
-std = np.array([0,-hongkongG,0])
+iotstd = np.array([0,-hongkongG,0])
 
 iotCols = ['LLACx', 'LLACy', 'LLACz', 'LLGYx', 'LLGYy', 'LLGYz'
     , 'LMACx', 'LMACy', 'LMACz', 'LMGYx', 'LMGYy', 'LMGYz'
@@ -144,7 +144,7 @@ def rotation_matrix(vector_orig, vector_fin):
 
     return R
 
-def getCaliData(staticData):
+def getCaliData(staticData,stdg):
     staticData = staticData[iotCols]
     # staticData.loc['std'] = staticData.apply(lambda x: x.std(ddof=0))
     staticData.loc['std'] = staticData.apply(lambda x: x.mean())
@@ -161,8 +161,8 @@ def getCaliData(staticData):
         data = caliData[acAxis[axis]]
         data = (np.array(data))[0]
         # print(data,std)
-        R = rotation_matrix(data, std)
-        index = np.linalg.norm(std) / np.linalg.norm(data)
+        R = rotation_matrix(data, stdg)
+        index = np.linalg.norm(stdg) / np.linalg.norm(data)
         rotMat[axis] = [R,index]
 
 
@@ -235,7 +235,7 @@ def msgProcess(msg):
 
 if __name__ == '__main__':
     staticData = iotStaticData('static.txt')
-    caliData, rotMat = getCaliData(staticData)
+    caliData, rotMat = getCaliData(staticData,iotstd)
 
     rawData = open('test.txt', 'r')  # raw data file
     rawDataFile = rawData.readlines()
