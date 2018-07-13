@@ -5370,3 +5370,43 @@ kam mean:0.007189733856775411
 MSE:1.5622822082943803e-05
 RMSE:0.003952571578471895
 RMSE / mean:0.5497521406508111
+
+trial:iot-allData-L
+data size:(12098, 6)
+method:RandomForest
+training dataset R2 score:0.9740937296094044
+test dataset R2 score:0.8290690883813262
+OOB score:0.8181477475933412
+kam max:0.042298
+kam mean:0.01711694022038568
+MSE:2.0003899760693274e-05
+RMSE:0.004472571940247945
+RMSE / mean:0.2612950610717953
+
+=============================
+trial:iot-allData-L
+data size:(12098, 6)
+method:RandomForest
+training dataset R2 score:0.9736531754020895
+test dataset R2 score:0.8225449161067588
+OOB score:0.8119176861079239
+kam max:0.042298
+kam mean:0.016885987327823662
+MSE:2.1064451573844145e-05
+RMSE:0.004589602550749263
+RMSE / mean:0.2717994785645022
+
+trial:iot-allData-R
+data size:(12525, 6)
+method:RandomForest
+training dataset R2 score:0.979846691270416
+test dataset R2 score:0.8642030439796533
+OOB score:0.8567505922153831
+kam max:0.046812
+kam mean:0.01425833076104311
+MSE:1.5247094252521344e-05
+RMSE:0.003904752777388262
+RMSE / mean:0.27385763753334325
+=============================
+
+
