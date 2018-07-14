@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae4b3ba7-fd59-4d3b-bc3d-e89491aab456" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/kamPredictionApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/kamPredictionApp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lagtets.py" beforeDir="false" afterPath="$PROJECT_DIR$/lagtets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outcome/testresult.txt" beforeDir="false" afterPath="$PROJECT_DIR$/outcome/testresult.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static.txt" beforeDir="false" afterPath="$PROJECT_DIR$/static.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plotkam.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/axisPredApp.py" beforeDir="false" afterPath="$PROJECT_DIR$/axisPredApp.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -43,7 +41,7 @@
       <file leaf-file-name="kamPredictionApp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/kamPredictionApp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="4369">
               <caret line="263" column="32" selection-start-line="263" selection-start-column="32" selection-end-line="263" selection-end-column="32" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -55,7 +53,7 @@
       <file leaf-file-name="confusionMat.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/confusionMat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
+            <state relative-caret-position="748">
               <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -67,13 +65,13 @@
       <file leaf-file-name="lagtets.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lagtets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1105">
+            <state relative-caret-position="1156">
               <caret line="73" selection-start-line="73" selection-end-line="73" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="kamIotMap.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="kamIotMap.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/kamIotMap.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="441">
@@ -81,6 +79,27 @@
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plotkam.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/plotkam.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="287">
+              <caret line="27" column="26" lean-forward="true" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="axisPredApp.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/axisPredApp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" selection-start-line="7" selection-end-line="8" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -96,7 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lag</find>
       <find>corr</find>
       <find>tail</find>
       <find>resultDir</find>
@@ -126,6 +144,7 @@
       <find>readStaticData</find>
       <find>getCaliData</find>
       <find>caliData</find>
+      <find>Rkamall</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -151,14 +170,16 @@
         <option value="$PROJECT_DIR$/confusionMat.py" />
         <option value="$PROJECT_DIR$/iotDataProcess.py" />
         <option value="$PROJECT_DIR$/kamPredictionApp.py" />
+        <option value="$PROJECT_DIR$/axisPredApp.py" />
+        <option value="$PROJECT_DIR$/plotkam.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="15" />
-    <option name="y" value="30" />
-    <option name="width" value="1890" />
-    <option name="height" value="930" />
+    <option name="x" value="749" />
+    <option name="y" value="238" />
+    <option name="width" value="1288" />
+    <option name="height" value="872" />
   </component>
   <component name="ProjectView">
     <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
@@ -193,14 +214,6 @@
               <item name="C:" type="cbb8eebc:String" user="C:" />
               <item name="Users" type="cbb8eebc:String" user="Users" />
               <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="External Dependencies" type="cbb8eebc:String" user="External Dependencies" />
-              <item name="C:" type="cbb8eebc:String" user="C:" />
-              <item name="Users" type="cbb8eebc:String" user="Users" />
-              <item name="cwang224" type="cbb8eebc:String" user="cwang224" />
-              <item name="Desktop" type="cbb8eebc:String" user="Desktop" />
             </path>
           </expand>
           <select />
@@ -244,7 +257,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.kamPredictionApp">
+  <component name="RunManager" selected="Python.plotkam">
     <configuration name="confusionMat" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="KamProcessing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -317,7 +330,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="lassoRegression" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="plotkam" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="KamProcessing" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -329,26 +342,26 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/lassoRegression.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/plotkam.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list>
-      <item itemvalue="Python.lassoRegression" />
       <item itemvalue="Python.lagtets" />
       <item itemvalue="Python.kamPredictionApp" />
       <item itemvalue="Python.confusionMat" />
       <item itemvalue="Python.iotDataProcess" />
+      <item itemvalue="Python.plotkam" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.plotkam" />
         <item itemvalue="Python.kamPredictionApp" />
         <item itemvalue="Python.iotDataProcess" />
         <item itemvalue="Python.confusionMat" />
         <item itemvalue="Python.lagtets" />
-        <item itemvalue="Python.lassoRegression" />
       </list>
     </recent_temporary>
   </component>
@@ -384,7 +397,7 @@
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.44700462" visible="true" weight="0.1421875" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32920355" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="5" visible="true" weight="0.16684265" />
+      <window_info active="true" anchor="bottom" id="Run" order="5" visible="true" weight="0.17951426" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32920355" />
       <window_info anchor="right" x="38" y="361" width="192" height="218" id="Structure" order="3" sideWeight="0.5871314" side_tool="true" visible="true" weight="0.13333334" />
@@ -417,32 +430,10 @@
           <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="26" />
+      <option name="time" value="29" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/iotDataProcess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DdtaProcessing.py" />
-    <entry file="file://$PROJECT_DIR$/lassoTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iotDataProcess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lassoTest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
@@ -551,7 +542,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/confusionMat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
+        <state relative-caret-position="748">
           <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -561,7 +552,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lagtets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1105">
+        <state relative-caret-position="1156">
           <caret line="73" selection-start-line="73" selection-end-line="73" />
         </state>
       </provider>
@@ -591,11 +582,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/kamPredictionApp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
+        <state relative-caret-position="4369">
           <caret line="263" column="32" selection-start-line="263" selection-start-column="32" selection-end-line="263" selection-end-column="32" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/paho/mqtt/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="2646" selection-start-line="2646" selection-end-line="2646" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/json/decoder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="356" selection-start-line="356" selection-end-line="356" />
         </state>
       </provider>
     </entry>
@@ -605,6 +610,23 @@
           <caret line="91" column="38" selection-start-line="91" selection-start-column="38" selection-end-line="91" selection-end-column="38" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/axisPredApp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="8" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plotkam.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="27" column="26" lean-forward="true" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
